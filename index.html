@@ -77,18 +77,6 @@
             font-weight: 500;
         }
 
-        .frame-study-mode {
-            background-color: #363636;
-            padding: 3.5rem 1.25rem 6rem 1.25rem;
-        }
-
-        .frame-study-mode .editorial-sheet {
-            max-width: 1260px;
-            margin: 0 auto 4.25rem auto;
-            box-shadow: 0 28px 65px rgba(0, 0, 0, 0.42);
-            border: none;
-        }
-
         .editorial-photo {
             transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s ease;
         }
@@ -114,14 +102,6 @@
             transform: scale(1.26);
         }
 
-        body.bw-editorial-mode .drive-photo-render {
-            filter: grayscale(100%) contrast(1.08);
-        }
-
-        body.bw-editorial-mode .drive-photo-render:hover {
-            filter: grayscale(0%) contrast(1);
-        }
-
         ::-webkit-scrollbar {
             width: 5px;
         }
@@ -134,26 +114,6 @@
     </style>
 </head>
 <body id="app-body" class="transition-colors duration-500">
-
-    <!-- Navigation Bar -->
-    <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 bg-ink/95 backdrop-blur-md text-white px-3 py-2 rounded-full shadow-2xl border border-white/15 text-[11px] max-w-[96vw]">
-        <button onclick="scrollToFrame('frame-1')" class="px-2.5 py-1 rounded-full bg-white text-ink font-semibold transition">01 · Portada</button>
-        <button onclick="scrollToFrame('frame-2')" class="px-2.5 py-1 rounded-full hover:bg-white/15 transition">02 · Índice</button>
-        <button onclick="scrollToFrame('frame-3')" class="px-2.5 py-1 rounded-full hover:bg-white/15 transition">03 · Ficha Proyecto</button>
-        <button onclick="scrollToFrame('frame-4')" class="px-2.5 py-1 rounded-full hover:bg-white/15 transition">04 · Surcos</button>
-        <button onclick="scrollToFrame('frame-5')" class="px-2.5 py-1 rounded-full hover:bg-white/15 transition">05 · Contacto</button>
-        <div class="h-3.5 w-[1px] bg-white/20 mx-0.5"></div>
-        <button onclick="cycleSculptureMaterial()" class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-200 border border-amber-400/30 hover:bg-amber-500/30 transition font-semibold flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-            <span id="floating-3d-label">3D: Arcilla Real</span>
-        </button>
-        <button onclick="toggleColorEditorialMode()" id="color-toggle-btn" class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 transition">
-            Color Original
-        </button>
-        <button onclick="togglePresentationMode()" id="mode-toggle-btn" class="px-2.5 py-1 rounded-full bg-white/15 hover:bg-white/25 transition hidden md:inline-block font-medium">
-            Vista 5 Láminas
-        </button>
-    </div>
 
     <!-- Section 01: Hero -->
     <section id="frame-1" class="editorial-sheet relative w-full min-h-[93vh] bg-paper overflow-hidden flex flex-col justify-between pt-5 pb-8 px-5 sm:px-8 border-b border-neutral-200">
@@ -659,9 +619,19 @@
             </div>
         </div>
 
-        <div class="relative sm:absolute inset-0 flex items-center justify-center sm:justify-end sm:pr-[5%] pointer-events-none z-10 my-4 sm:my-0">
-            <div class="w-[330px] h-[390px] sm:w-[580px] sm:h-[670px] md:w-[680px] md:h-[750px] pointer-events-auto">
+        <div class="relative sm:absolute inset-0 flex flex-col items-center justify-center sm:items-end sm:justify-center sm:pr-[5%] pointer-events-none z-10 my-4 sm:my-0">
+            <div class="w-[330px] h-[390px] sm:w-[580px] sm:h-[650px] md:w-[680px] md:h-[710px] pointer-events-auto relative">
                 <canvas id="closing-sculpture-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+            </div>
+
+            <div class="pointer-events-auto mt-2 sm:mt-0 sm:mr-8 flex items-center gap-1.5 bg-paper/90 backdrop-blur-xs border border-neutral-300 p-1 shadow-sm">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-muted px-2">Visualización 3D:</span>
+                <button id="btn-mode-wire" onclick="setSculptureMode('wire')" class="text-[10.5px] font-mono font-semibold px-2.5 py-1 bg-ink text-white transition">
+                    Malla Grasshopper
+                </button>
+                <button id="btn-mode-clay" onclick="setSculptureMode('clay')" class="text-[10.5px] font-mono font-semibold px-2.5 py-1 text-ink hover:bg-neutral-200 transition">
+                    Arcilla Real
+                </button>
             </div>
         </div>
 
@@ -908,9 +878,9 @@
                 wikiUrl: "https://wiki.ead.pucv.cl/Matias_Arce,_Alonso_Hernandez,_Florencia_Pimentel._TPyT_S1_2026._Flujo_y_Asiento",
                 wikiLabel: "Wiki Casiopea: Urdimbre Contención ↗",
                 secondaryLinks: [
-                    { url: "https://wiki.ead.pucv.cl/Taller_de_personas_y_territorios_2026", label: "Taller de Personas y Territorios 2026 ↗" }
+                    { url: "https://wiki.ead.pucv.cl/Taller_de_personas_y_territorios_2026", label: "Taller Personas y Territorios 2026 ↗" }
                 ],
-                tags: ["Impresión 3D Arcilla", "Acrílico Corte Láser", "Interacción Material", "Andamio Efímero", "TPYT 2026"]
+                tags: ["Impresión 3D en Arcilla", "Andamio Efímero", "Fabricación Digital", "Interacción Material", "TPYT 2026"]
             },
             {
                 id: 3,
@@ -922,9 +892,9 @@
                 shortTitle: "Resonancias del Territorio",
                 giantTitle: "Resonancias",
                 kicker: "RESONANCIAS DEL TERRITORIO · 2026",
-                subtitle: "Tradición alfarera Diaguita-Inca, resonancia de Helmholtz y moldes de yeso en dos chapas",
+                subtitle: "Aerófono cerámico contemporáneo a partir de tradición Diaguita-Inca, resonancia de Helmholtz y moldes de colada",
                 discipline: "Modelación Digital / Diseño Acústico / Fabricación y Matricería Cerámica",
-                methods: "Blender, Autodesk Fusion 360, software de laminado 3D. Impresión 3D en PLA Basic, Encofrado en MDF, moldes en yeso cerámico y colada en arcilla líquida.",
+                methods: "Blender, Autodesk Fusion 360, Impresión 3D en PLA Basic, Encofrado en MDF, moldes en yeso cerámico y colada en arcilla líquida.",
                 context: "Taller de Personas y Territorios (Ciclo 2, 2026), e[ad] PUCV.",
                 team: "Autor: Matías Arce Córdova.",
                 description: "Investigación morfológica, acústica y material orientada al diseño y fabricación de un aerófono cerámico contemporáneo a partir de matrices y moldes de colada. El proyecto parte del estudio de la tradición alfarera prehispánica Diaguita-Inca y el principio acústico de resonancia de Helmholtz, trasladando el rigor geométrico de patrones textiles ancestrales hacia un cuerpo tridimensional funcional.",
@@ -935,11 +905,11 @@
                     { id: "1NYgQy3G33UvI0hRKK0uggQ270ZmYhZrf", num: "02", label: "Resonancias del Territorio · 02", detailZoom: false }
                 ],
                 wikiUrl: "https://wiki.ead.pucv.cl/Taller_de_personas_y_territorios_2026",
-                wikiLabel: "Wiki Casiopea: Resonancias del Territorio ↗",
+                wikiLabel: "Wiki Casiopea: TPYT Ciclo 2 (2026) ↗",
                 secondaryLinks: [
-                    { url: "https://wiki.ead.pucv.cl/Matias_Cordova_Arce", label: "Perfil Autor: Matías Arce Córdova en Casiopea ↗" }
+                    { url: "https://wiki.ead.pucv.cl/Matias_Cordova_Arce", label: "Perfil Autor Wiki Casiopea ↗" }
                 ],
-                tags: ["Diseño Acústico", "Helmholtz", "Matricería en Yeso", "Colada Cerámica", "Blender / Fusion 360", "Diaguita-Inca"]
+                tags: ["Aerófono Cerámico", "Resonancia de Helmholtz", "Diaguita-Inca", "Matricería en Yeso", "Fusion 360", "Colada Cerámica"]
             },
             {
                 id: 4,
@@ -951,9 +921,9 @@
                 shortTitle: "Trayectoria Eólica Inversa",
                 giantTitle: "Trayectoria",
                 kicker: "TRAYECTORIA EÓLICA INVERSA · 2026",
-                subtitle: "Computación generativa y manufactura aditiva cerámica a partir de la semilla de arce",
+                subtitle: "Traducción del descenso helicoidal de la sámara en estructura cerámica autoportante vía Grasshopper",
                 discipline: "Computational Design / Parametric Modeling / Ceramic 3D Printing (LDM)",
-                methods: "Tracker (análisis de movimiento), Rhinoceros 3D, Grasshopper. Parámetros: Boquilla de 5 mm, paso vertical de 1.5 mm, costura continua en espiral, avance F500.",
+                methods: "Tracker (análisis de movimiento), Rhinoceros 3D, Grasshopper. Boquilla de 5 mm, paso vertical de 1.5 mm, costura continua en espiral, avance F500.",
                 context: "Taller de Personas y Territorios 2026, e[ad] PUCV.",
                 team: "Autor: Matías Arce Córdova.",
                 description: "Exploración morfológica que traduce un fenómeno cinético natural en una estructura física autoportante mediante computación generativa y manufactura aditiva. El punto de partida es la observación del descenso helicoidal de la sámara (semilla de arce), cuya geometría responde a fuerzas contrapuestas de gravedad y resistencia del aire.",
@@ -961,781 +931,364 @@
                 driveFileId: "13i_bCZG460GTQqRL8RENCGY6qxehOMiq",
                 gallery: [
                     { id: "13i_bCZG460GTQqRL8RENCGY6qxehOMiq", num: "01", label: "Trayectoria Eólica Inversa · 01", detailZoom: false },
-                    { id: "1gUyYwSLCGuRnmia1boomsUNW0bCM9Rxv", num: "02", label: "Trayectoria Eólica Inversa · 02", detailZoom: false }
+                    { id: "1FQdcwyp7v50K0VOal65A7g1HXk_JfD0K", num: "02", label: "Trayectoria Eólica Inversa · 02", detailZoom: false }
                 ],
                 wikiUrl: "https://wiki.ead.pucv.cl/TPyT_S1_2026._Trayectoria_E%C3%B3lica_Inversa",
                 wikiLabel: "Wiki Casiopea: Trayectoria Eólica Inversa ↗",
                 secondaryLinks: [
-                    { url: "https://wiki.ead.pucv.cl/Taller_de_personas_y_territorios_2026", label: "Taller de Personas y Territorios 2026 ↗" }
+                    { url: "https://wiki.ead.pucv.cl/Taller_de_personas_y_territorios_2026", label: "Taller Personas y Territorios 2026 ↗" }
                 ],
-                tags: ["Computational Design", "Rhinoceros 3D", "Grasshopper", "Tracker", "Ceramic 3D Printing LDM", "Sámara de Arce"]
+                tags: ["Computational Design", "Grasshopper", "Rhinoceros 3D", "Ceramic 3D Printing LDM", "Sámara", "Tracker"]
             },
             {
                 id: 5,
                 year: "2026",
                 code: "PERCEPCIÓN SONORA",
                 pages: "01-02",
-                category: "PROYECTO DE DISEÑO DE INFORMACIÓN Y UX",
+                category: "PROYECTO DE DISEÑO DE INFORMACIÓN Y EXPERIENCIA DE USUARIO",
                 projectName: "Percepción Sonora",
                 shortTitle: "Percepción Sonora",
                 giantTitle: "Percepción",
                 kicker: "PERCEPCIÓN SONORA · 2026",
-                subtitle: "Captura y espacialización de la percepción acústica en Muelle Prat, Sotomayor, Serrano y Echaurren",
-                discipline: "Diseño de Información / Instrumentación y Dispositivos / UX — Web Front-End",
-                methods: "Diseño colectivo de instrumento físico de medición con discos de acrílico traslúcido, trabajo de campo (46 registros) y desarrollo de interfaz web interactiva (HTML/CSS/JS en GitHub Pages).",
-                context: "Taller de Diseño de Servicios, e[ad] PUCV (2026) (EN PROCESO).",
-                team: "Equipo del Proyecto (Grupo 2): Matías Arce Córdova, Francisco Daniou, Sofía Vera, Catalina Cabezas y Piera Ivelic · Diseño y Desarrollo Web (GitHub Pages): Matías Arce Córdova.",
-                description: "Investigación empírica y diseño de dispositivos desarrollados por el Grupo 2 para la captura y espacialización de la percepción acústica en el Barrio Puerto de Valparaíso. El proyecto aborda el paisaje sonoro no como una simple cifra de decibeles, sino como una dimensión habitable y sensible del espacio público, donde la arquitectura y los flujos cotidianos condicionan el confort humano.",
-                body2: "A través del diseño y fabricación grupal de un instrumento de medición física en terreno, el equipo sistematizó observaciones en Muelle Prat, Plaza Sotomayor, Calle Serrano y Plaza Echaurren. Como extensión digital del proyecto colectivo, Matías Arce Córdova diseñó y desarrolló la plataforma web interactiva que opera como repositorio y visualizador del registro de campo.",
+                subtitle: "Instrumento físico de captura acústica en Barrio Puerto y plataforma web interactiva de visualización",
+                discipline: "Diseño de Información / Instrumentación y Dispositivos / UX · Web Front-End",
+                methods: "Diseño de instrumento físico de medición, trabajo de campo en 4 sectores del Barrio Puerto y repositorio web (HTML/CSS/JS en GitHub Pages).",
+                context: "Taller de Diseño de Servicios, e[ad] PUCV (2026).",
+                team: "Equipo Proyecto (Grupo 2): Matías Arce Córdova, Francisco Daniou, Sofía Vera, Catalina Cabezas y Piera Ivelic. Diseño y Desarrollo Plataforma Web: Matías Arce Córdova.",
+                description: "Investigación empírica y diseño de dispositivos desarrollada por el Grupo 2 (Matías Arce Córdova, Francisco Daniou, Sofía Vera, Catalina Cabezas y Piera Ivelic) para la captura y espacialización de la percepción acústica en el Barrio Puerto de Valparaíso. El proyecto aborda el paisaje sonoro no como una simple cifra de decibeles, sino como una dimensión habitable y sensible del espacio público.",
+                body2: "A través del diseño y fabricación grupal de un instrumento de medición física de terreno, se sistematizaron observaciones en Muelle Prat, Plaza Sotomayor, Calle Serrano y Plaza Echaurren. Como extensión técnica, Matías Arce Córdova diseñó y desarrolló la plataforma web interactiva que opera como repositorio y visualización del registro de campo.",
                 driveFileId: "1fGDQ63bZ4zdCmHn4OsjXLikQBATvL94Q",
                 gallery: [
                     { id: "1fGDQ63bZ4zdCmHn4OsjXLikQBATvL94Q", num: "01", label: "Percepción Sonora · 01", detailZoom: false },
                     { id: "1fGDQ63bZ4zdCmHn4OsjXLikQBATvL94Q", num: "02", label: "Percepción Sonora · 02", detailZoom: true }
                 ],
                 wikiUrl: "https://wiki.ead.pucv.cl/Proyecto_de_Visualizaci%C3%B3n_-_Grupo_2",
-                wikiLabel: "Wiki Casiopea: Percepción Sonora ↗",
+                wikiLabel: "Wiki Casiopea: Grupo 2 Percepción Sonora ↗",
                 secondaryLinks: [
-                    { url: "https://matiasarcec.github.io/percepcionsonora/", label: "Plataforma Web Interactiva (Desarrollo: Matías Arce Córdova) ↗" }
+                    { url: "https://matiasarcec.github.io/percepcionsonora/", label: "Plataforma Web Interactiva (Autor: Matías Arce Córdova) ↗" }
                 ],
-                tags: ["Diseño de Información", "Grupo 2 e[ad]", "Instrumento Acrílico", "Desarrollo Web Front-End", "Barrio Puerto", "Paisaje Sonoro"]
+                tags: ["Diseño de Información", "Instrumento Físico", "Paisaje Sonoro", "Grupo 2 e[ad]", "Web Front-End", "GitHub Pages"]
             }
         ];
 
-        let currentFrame3Project = 2;
-        let currentFrame3PhotoIdx = 0;
-        let currentModalProject = 2;
-        let currentModalPhotoIdx = 0;
+        const portfolioVideos = [
+            {
+                id: 0,
+                num: "01",
+                code: "SURCOS · 01-04",
+                title: "Surcos · Pieza Audiovisual 01",
+                subtitle: "Dirección, cámara y montaje autodidacta — Matías Arce Córdova",
+                projectRef: "Surcos · Marca Personal",
+                year: "2026",
+                youtubeId: "CpAsqw2tDj4",
+                description: "Pieza audiovisual desarrollada bajo Surcos, marca personal autodidacta de Matías Arce Córdova dedicada a la exploración en fotografía, captura de movimiento y narrativa visual."
+            },
+            {
+                id: 1,
+                num: "02",
+                code: "SURCOS · 02-04",
+                title: "Surcos · Pieza Audiovisual 02",
+                subtitle: "Registro documental, atmósfera y ritmo visual — Surcos",
+                projectRef: "Surcos · Marca Personal",
+                year: "2026",
+                youtubeId: "EKJgdmxpLks",
+                description: "Producción audiovisual y trabajo de edición enfocado en la observación del territorio, la luz natural y el ritmo sonoro a través del lenguaje cinematográfico."
+            },
+            {
+                id: 2,
+                num: "03",
+                code: "SURCOS · 03-04",
+                title: "Surcos · Pieza Audiovisual 03",
+                subtitle: "Experimentación visual y dirección de fotografía — Surcos",
+                projectRef: "Surcos · Marca Personal",
+                year: "2026",
+                youtubeId: "UTuDY6BrJJM",
+                description: "Exploración de encuadre, textura e imagen en movimiento realizada de manera autodidacta como parte del archivo audiovisual de Surcos."
+            },
+            {
+                id: 3,
+                num: "04",
+                code: "SURCOS · 04-04",
+                title: "Surcos · Pieza Audiovisual 04",
+                subtitle: "Composición visual, montaje y captura de campo — Surcos",
+                projectRef: "Surcos · Marca Personal",
+                year: "2026",
+                youtubeId: "LhvuLcE7LDc",
+                description: "Cuarta entrega del catálogo audiovisual de Surcos, integrando sensibilidad fotográfica, color y edición digital."
+            }
+        ];
 
-        function buildUniformPhotoHTML(projectIndex, photoIdx) {
-            const p = portfolioProjects[projectIndex];
-            const gItem = p.gallery[photoIdx] || p.gallery[0];
-            const endpoints = getDriveEndpoints(gItem.id);
-            const zoomClass = gItem.detailZoom ? 'photo-detail-zoom' : 'editorial-photo';
+        let currentActiveVideo = 0;
+        let useNoCookieHost = false;
+        let isVideoPlayingInline = false;
+
+        function buildYoutubeEmbedSrc(youtubeId, autoplay) {
+            const cleanId = (youtubeId || '').trim();
+            const host = useNoCookieHost
+                ? 'https://www.youtube-nocookie.com'
+                : 'https://www.youtube.com';
+            const params = new URLSearchParams({
+                rel: '0',
+                modestbranding: '1',
+                playsinline: '1',
+                enablejsapi: '1'
+            });
+            if (autoplay) {
+                params.set('autoplay', '1');
+            }
+            return `${host}/embed/${cleanId}?${params.toString()}`;
+        }
+
+        function renderYoutubeStage() {
+            const v = portfolioVideos[currentActiveVideo] || portfolioVideos[0];
+            const stage = document.getElementById('youtube-stage-wrapper');
+            if (!stage) return;
+
+            const thumbHq = `https://i.ytimg.com/vi/${v.youtubeId}/maxresdefault.jpg`;
+            const thumbFallback = `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`;
+
+            if (!isVideoPlayingInline) {
+                stage.innerHTML = `
+                    <div class="relative w-full h-full bg-ink cursor-pointer select-none group" onclick="activateInPageVideoPlayer()">
+                        <img src="${thumbHq}"
+                             onerror="this.onerror=null;this.src='${thumbFallback}';"
+                             alt="${v.title}"
+                             class="w-full h-full object-cover opacity-90 group-hover:scale-[1.02] group-hover:opacity-100 transition duration-500" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/30"></div>
+
+                        <div class="absolute top-3 left-3 right-3 flex items-center justify-between text-white text-[10.5px] font-mono">
+                            <span class="bg-black/75 px-2.5 py-1 border border-white/15 uppercase">* surcos · ${v.num} / 04</span>
+                            <span class="bg-black/75 px-2.5 py-1 border border-white/15">YouTube HD</span>
+                        </div>
+
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-paper/95 text-ink flex items-center justify-center shadow-2xl group-hover:scale-110 transition duration-300">
+                                <svg class="w-7 h-7 ml-1 fill-current" viewBox="0 0 24 24">
+                                    <polygon points="5,3 19,12 5,21"></polygon>
+                                </svg>
+                            </div>
+                            <span class="mt-3 bg-black/80 text-white text-[11px] font-semibold px-3.5 py-1 tracking-tight border border-white/15">
+                                Haz clic para reproducir aquí (${v.title})
+                            </span>
+                        </div>
+
+                        <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white/90 text-[11px]">
+                            <span class="font-semibold truncate pr-2">${v.title}</span>
+                            <a href="https://youtu.be/${v.youtubeId}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="underline font-mono text-[10px] shrink-0 hover:text-white">
+                                Abrir en YouTube ↗
+                            </a>
+                        </div>
+                    </div>
+                `;
+            } else {
+                const embedSrc = buildYoutubeEmbedSrc(v.youtubeId, true);
+                stage.innerHTML = `
+                    <div class="relative w-full h-full bg-black">
+                        <iframe
+                            id="youtube-main-iframe"
+                            class="w-full h-full border-0"
+                            src="${embedSrc}"
+                            title="${v.title}"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe>
+                        <div class="absolute bottom-2 right-2 z-20 flex items-center gap-1.5">
+                            <button onclick="switchEmbedHostMode()" class="bg-black/80 hover:bg-black text-white text-[10px] font-mono px-2.5 py-1 border border-white/20 transition">
+                                Cambiar servidor ↻
+                            </button>
+                            <a href="https://youtu.be/${v.youtubeId}" target="_blank" rel="noopener noreferrer" class="bg-paper text-ink hover:bg-neutral-200 text-[10px] font-semibold px-2.5 py-1 shadow transition">
+                                Ver en YouTube ↗
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function activateInPageVideoPlayer() {
+            isVideoPlayingInline = true;
+            renderYoutubeStage();
+        }
+
+        function switchEmbedHostMode() {
+            useNoCookieHost = !useNoCookieHost;
+            const modeLabel = document.getElementById('yt-embed-mode-label');
+            if (modeLabel) {
+                modeLabel.textContent = useNoCookieHost
+                    ? 'Servidor Reproductor: No-Cookie'
+                    : 'Servidor Reproductor: Estándar';
+            }
+            isVideoPlayingInline = true;
+            renderYoutubeStage();
+        }
+
+        function renderYoutubeSection() {
+            const v = portfolioVideos[currentActiveVideo] || portfolioVideos[0];
+
+            renderYoutubeStage();
+
+            document.getElementById('yt-active-title').textContent = v.title;
+            document.getElementById('yt-active-desc').textContent = v.description;
+            document.getElementById('yt-caption-left').textContent = `${v.title} · ${v.num}/04`;
+            document.getElementById('yt-external-watch').href = `https://youtu.be/${v.youtubeId}`;
+            document.getElementById('yt-active-code-badge').textContent = `${v.num} / 04`;
+
+            const navTabs = document.getElementById('video-nav-tabs');
+            if (navTabs) {
+                navTabs.innerHTML = portfolioVideos.map((item, idx) => `
+                    <button onclick="selectPortfolioVideo(${idx}, true)" class="${idx === currentActiveVideo ? 'font-bold text-ink underline underline-offset-4' : 'hover:text-ink transition'}">
+                        ${item.num} · surcos
+                    </button>
+                `).join('');
+            }
+
+            const cardsContainer = document.getElementById('youtube-cards-list');
+            if (cardsContainer) {
+                cardsContainer.innerHTML = portfolioVideos.map((item, idx) => {
+                    const active = idx === currentActiveVideo;
+                    const thumbUrl = `https://i.ytimg.com/vi/${item.youtubeId}/hqdefault.jpg`;
+                    return `
+                        <div onclick="selectPortfolioVideo(${idx}, true)" class="cursor-pointer group border transition p-2 bg-offpaper ${active ? 'border-ink ring-1 ring-ink' : 'border-neutral-200 hover:border-neutral-400'}">
+                            <div class="photo-uniform-frame bg-neutral-900 relative">
+                                <img src="${thumbUrl}" alt="${item.title}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition editorial-photo" />
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="w-8 h-8 rounded-full bg-ink/85 text-white flex items-center justify-center text-[10px] shadow-md group-hover:scale-110 transition">▶</span>
+                                </div>
+                                <span class="absolute top-1.5 left-1.5 bg-ink/85 text-white text-[9.5px] font-mono px-1.5 py-0.5">
+                                    ${item.num}
+                                </span>
+                            </div>
+                            <div class="mt-2 flex items-center justify-between text-[11px]">
+                                <span class="font-bold text-ink truncate">Surcos · ${item.num}</span>
+                                <span class="font-mono text-[10px] text-muted">${active ? 'Activo' : 'Ver'}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function selectPortfolioVideo(index, autoPlayInPage = true) {
+            currentActiveVideo = index;
+            isVideoPlayingInline = Boolean(autoPlayInPage);
+            renderYoutubeSection();
+        }
+
+        function renderProjectCoverMarkup(project, photoIndex = 0) {
+            const galleryItem = (project.gallery && project.gallery[photoIndex]) || { id: project.driveFileId, num: "01", detailZoom: false };
+            const endpoints = getDriveEndpoints(galleryItem.id);
+            const zoomClass = galleryItem.detailZoom ? 'photo-detail-zoom' : '';
 
             return `
-                <div class="relative w-full h-full bg-cardgray flex items-center justify-center overflow-hidden group">
-                    <img src="${endpoints.primary}"
+                <div class="relative w-full h-full overflow-hidden bg-cardgray">
+                    <img src="${endpoints.primary}" 
                          data-fallback-1="${endpoints.fallback1}"
                          data-fallback-2="${endpoints.fallback2}"
                          data-fallback-step="0"
                          onerror="window.handleDriveImgError(this)"
-                         alt="${p.projectName} · ${gItem.num}"
-                         class="w-full h-full object-cover ${zoomClass} drive-photo-render" />
-                    <div class="absolute top-2.5 left-2.5 bg-ink/85 backdrop-blur-xs text-white px-2 py-0.5 text-[9.5px] font-mono">
-                        ${gItem.num} / 02
-                    </div>
-                    <div class="absolute bottom-2.5 right-2.5 bg-ink/85 backdrop-blur-xs text-white px-2.5 py-1 text-[10px] font-medium">
-                        ${p.projectName} · ${gItem.num}
+                         alt="${project.projectName} · ${galleryItem.num}" 
+                         class="editorial-photo ${zoomClass} w-full h-full object-cover" />
+                    <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+                        <span class="bg-ink/85 text-white text-[10px] font-mono px-2 py-0.5 uppercase tracking-wider">
+                            ${project.projectName}
+                        </span>
+                        <span class="bg-paper/90 text-ink text-[10px] font-mono font-bold px-2 py-0.5 border border-neutral-300">
+                            ${galleryItem.num} / 02
+                        </span>
                     </div>
                 </div>
             `;
         }
 
-        function renderProjectMedia() {
-            const activeProj = portfolioProjects[currentFrame3Project];
-            const f3Center = document.getElementById('f3-center-frame');
-            if (f3Center) {
-                f3Center.innerHTML = buildUniformPhotoHTML(currentFrame3Project, currentFrame3PhotoIdx);
-                f3Center.onclick = () => openProjectModal(currentFrame3Project, currentFrame3PhotoIdx);
-            }
-
-            const thumbsContainer = document.getElementById('f3-gallery-thumbs');
-            if (thumbsContainer && activeProj.gallery) {
-                thumbsContainer.innerHTML = activeProj.gallery.slice(0, 2).map((gItem, gIdx) => {
-                    const ep = getDriveEndpoints(gItem.id);
-                    const isSelected = gIdx === currentFrame3PhotoIdx;
-                    const zoomClass = gItem.detailZoom ? 'photo-detail-zoom' : '';
-                    return `
-                        <button onclick="selectFrame3Photo(${gIdx})" class="group text-left border ${isSelected ? 'border-ink bg-ink text-white' : 'border-neutral-300 bg-offpaper text-ink hover:border-ink'} transition overflow-hidden flex flex-col">
-                            <div class="photo-uniform-frame">
-                                <img src="${ep.primary}" data-fallback-1="${ep.fallback1}" data-fallback-2="${ep.fallback2}" data-fallback-step="0" onerror="window.handleDriveImgError(this)" alt="${activeProj.projectName} · ${gItem.num}" class="w-full h-full object-cover ${zoomClass} drive-photo-render" />
-                            </div>
-                            <div class="px-2.5 py-1.5 flex items-center justify-between w-full text-[10.5px] font-medium">
-                                <span class="truncate">${activeProj.projectName}</span>
-                                <span class="font-mono font-bold">${gItem.num}</span>
-                            </div>
-                        </button>
-                    `;
-                }).join('');
-            }
-        }
-
-        function selectFrame3Photo(photoIdx) {
-            currentFrame3PhotoIdx = photoIdx;
-            renderProjectMedia();
-        }
-
-        const youtubeWorkVideos = [
-            {
-                projectName: "Surcos · 01",
-                shortTab: "01 surcos",
-                code: "01-04",
-                num: "01",
-                videoId: "CpAsqw2tDj4",
-                author: "Matías Arce Córdova · * surcos",
-                description: "Realización audiovisual, cámara y edición autodidacta bajo la marca personal Surcos.",
-                coverDriveId: "1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo"
-            },
-            {
-                projectName: "Surcos · 02",
-                shortTab: "02 surcos",
-                code: "02-04",
-                num: "02",
-                videoId: "EKJgdmxpLks",
-                author: "Matías Arce Córdova · * surcos",
-                description: "Dirección de fotografía, captura en terreno y montaje audiovisual desarrollado en Surcos.",
-                coverDriveId: "1GoSxXkmrO1BKoR2Av1iMZLDp3SVzzuPa"
-            },
-            {
-                projectName: "Surcos · 03",
-                shortTab: "03 surcos",
-                code: "03-04",
-                num: "03",
-                videoId: "UTuDY6BrJJM",
-                author: "Matías Arce Córdova · * surcos",
-                description: "Exploración visual, registro documental y postproducción de video por Matías Arce Córdova.",
-                coverDriveId: "13i_bCZG460GTQqRL8RENCGY6qxehOMiq"
-            },
-            {
-                projectName: "Surcos · 04",
-                shortTab: "04 surcos",
-                code: "04-04",
-                num: "04",
-                videoId: "LhvuLcE7LDc",
-                author: "Matías Arce Córdova · * surcos",
-                description: "Registro audiovisual y narrativa en movimiento producida de forma autodidacta en Surcos.",
-                coverDriveId: "1mkU4elpStV3ivzHqEcESYQDI3C2xdShN"
-            }
-        ];
-
-        let activeYouTubeIdx = 0;
-        let embedHostMode = 0;
-
-        function getEmbedUrlForVideo(videoId, autoplay = false) {
-            const autoParam = autoplay ? "1" : "0";
-            let originParam = "";
-            try {
-                if (window.location && window.location.origin && window.location.origin.startsWith('http')) {
-                    originParam = `&origin=${encodeURIComponent(window.location.origin)}`;
-                }
-            } catch (e) {}
-
-            if (embedHostMode === 0) {
-                return `https://www.youtube.com/embed/${videoId}?autoplay=${autoParam}&rel=0&modestbranding=1&playsinline=1${originParam}`;
-            } else if (embedHostMode === 1) {
-                return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=${autoParam}&rel=0&modestbranding=1&playsinline=1`;
-            } else {
-                return `https://www.youtube.com/embed/${videoId}?autoplay=${autoParam}&controls=1&playsinline=1`;
-            }
-        }
-
-        window.activateInPageVideoPlayer = function() {
-            const currentVid = youtubeWorkVideos[activeYouTubeIdx] || youtubeWorkVideos[0];
-            const stage = document.getElementById('youtube-stage-wrapper');
-            if (!stage || !currentVid) return;
-
-            const embedSrc = getEmbedUrlForVideo(currentVid.videoId, true);
-            stage.innerHTML = `
-                <iframe id="youtube-main-iframe"
-                        class="w-full h-full border-0"
-                        src="${embedSrc}"
-                        title="${currentVid.projectName} — * surcos"
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen>
-                </iframe>
-            `;
-        };
-
-        window.switchEmbedHostMode = function() {
-            embedHostMode = (embedHostMode + 1) % 3;
-            const modeNames = ["Estándar (YouTube)", "Sin Cookies (NoCookie)", "Directo HTML5"];
-            const labelEl = document.getElementById('yt-embed-mode-label');
-            if (labelEl) {
-                labelEl.textContent = `Servidor Reproductor: ${modeNames[embedHostMode]}`;
-            }
-            activateInPageVideoPlayer();
-            showToast(`Reproductor cambiado a modo: ${modeNames[embedHostMode]}`);
-        };
-
-        function renderYouTubeSection(autoStart = false) {
-            const currentVid = youtubeWorkVideos[activeYouTubeIdx] || youtubeWorkVideos[0];
-            if (!currentVid) return;
-
-            const stage = document.getElementById('youtube-stage-wrapper');
-            if (stage) {
-                const thumbHd = `https://img.youtube.com/vi/${currentVid.videoId}/maxresdefault.jpg`;
-                const thumbHq = `https://img.youtube.com/vi/${currentVid.videoId}/hqdefault.jpg`;
-                const embedSrc = getEmbedUrlForVideo(currentVid.videoId, autoStart);
-
-                stage.innerHTML = `
-                    <iframe id="youtube-main-iframe"
-                            class="w-full h-full border-0 relative z-10"
-                            src="${embedSrc}"
-                            title="${currentVid.projectName} — * surcos"
-                            referrerpolicy="strict-origin-when-cross-origin"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowfullscreen>
-                    </iframe>
-                    <img src="${thumbHd}"
-                         onerror="this.onerror=null; this.src='${thumbHq}';"
-                         alt="${currentVid.projectName}"
-                         class="absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none z-0" />
-                `;
-            }
-
-            const titleEl = document.getElementById('yt-active-title');
-            if (titleEl) titleEl.textContent = currentVid.projectName;
-
-            const descEl = document.getElementById('yt-active-desc');
-            if (descEl) descEl.textContent = currentVid.description;
-
-            const watchLink = document.getElementById('yt-external-watch');
-            if (watchLink) watchLink.href = `https://youtu.be/${currentVid.videoId}`;
-
-            const badgeEl = document.getElementById('yt-active-code-badge');
-            if (badgeEl) badgeEl.textContent = `${currentVid.num} / 04`;
-
-            const captionLeft = document.getElementById('yt-caption-left');
-            if (captionLeft) captionLeft.textContent = `${currentVid.projectName} · 01-04`;
-
-            const navTabs = document.getElementById('video-nav-tabs');
-            if (navTabs) {
-                navTabs.innerHTML = youtubeWorkVideos.map((v, idx) => `
-                    <button onclick="selectYouTubeVideo(${idx})" class="${idx === activeYouTubeIdx ? 'font-bold text-ink underline underline-offset-4' : 'hover:text-ink text-ink/75'} transition">
-                        ${v.shortTab}
-                    </button>
-                `).join('');
-            }
-
-            const cardsList = document.getElementById('youtube-cards-list');
-            if (cardsList) {
-                cardsList.innerHTML = youtubeWorkVideos.map((v, idx) => {
-                    const isSelected = idx === activeYouTubeIdx;
-                    const thumbUrl = `https://img.youtube.com/vi/${v.videoId}/hqdefault.jpg`;
-                    const fallbackEp = getDriveEndpoints(v.coverDriveId || "1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo");
-                    return `
-                        <button onclick="selectYouTubeVideo(${idx})" class="group text-left border ${isSelected ? 'border-ink bg-ink text-white' : 'border-neutral-300 bg-offpaper text-ink hover:border-ink'} transition overflow-hidden flex flex-col">
-                            <div class="photo-uniform-frame">
-                                <img src="${thumbUrl}"
-                                     onerror="this.onerror=null; this.src='${fallbackEp.primary}';"
-                                     alt="${v.projectName}"
-                                     class="w-full h-full object-cover editorial-photo drive-photo-render" />
-                                <span class="absolute top-2 left-2 bg-ink/90 text-white text-[9.5px] font-mono px-2 py-0.5">
-                                    ${v.num} / 04
-                                </span>
-                                <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition">
-                                    <span class="w-8 h-8 rounded-full bg-white/95 text-ink flex items-center justify-center text-xs font-bold shadow-md">▶</span>
-                                </div>
-                            </div>
-                            <div class="px-2.5 py-1.5 flex items-center justify-between w-full text-[10.5px] font-semibold">
-                                <span class="truncate">${v.projectName}</span>
-                                <span class="font-mono text-[10px]">${v.num}</span>
-                            </div>
-                        </button>
-                    `;
-                }).join('');
-            }
-        }
-
-        window.selectYouTubeVideo = function(idx) {
-            activeYouTubeIdx = idx;
-            renderYouTubeSection(true);
-        };
-
-        let currentMaterialIndex = 0;
-        const materialsPreset = [
-            { name: "Arcilla Real (Textura LDM 1.5mm)", short: "3D: Arcilla Real", mode: "clay_photo" },
-            { name: "Grabado Técnico B/N (Lámina 11)", short: "3D: Grabado B/N", mode: "engraving" },
-            { name: "Malla Paramétrica Grasshopper", short: "3D: Malla Grasshopper", mode: "wire" }
-        ];
-
-        let sharedClayTextures = null;
-
-        function getAuthenticClayTextures() {
-            if (sharedClayTextures) return sharedClayTextures;
-
-            const width = 1024;
-            const height = 1024;
-
-            const diffCanvas = document.createElement('canvas');
-            diffCanvas.width = width;
-            diffCanvas.height = height;
-            const dCtx = diffCanvas.getContext('2d');
-
-            const bumpCanvas = document.createElement('canvas');
-            bumpCanvas.width = width;
-            bumpCanvas.height = height;
-            const bCtx = bumpCanvas.getContext('2d');
-
-            dCtx.fillStyle = '#928375';
-            dCtx.fillRect(0, 0, width, height);
-
-            bCtx.fillStyle = '#808080';
-            bCtx.fillRect(0, 0, width, height);
-
-            const numLayers = 96;
-            const layerPx = height / numLayers;
-
-            for (let layer = 0; layer < numLayers; layer++) {
-                const yCenter = layer * layerPx;
-
-                const gradDiff = dCtx.createLinearGradient(0, yCenter, 0, yCenter + layerPx);
-                gradDiff.addColorStop(0.0, '#66594e');
-                gradDiff.addColorStop(0.22, '#8b7d70');
-                gradDiff.addColorStop(0.50, '#9f9082');
-                gradDiff.addColorStop(0.78, '#8e8072');
-                gradDiff.addColorStop(1.0, '#62554a');
-
-                dCtx.fillStyle = gradDiff;
-                dCtx.fillRect(0, yCenter, width, layerPx + 0.5);
-
-                const gradBump = bCtx.createLinearGradient(0, yCenter, 0, yCenter + layerPx);
-                gradBump.addColorStop(0.0, '#242424');
-                gradBump.addColorStop(0.25, '#969696');
-                gradBump.addColorStop(0.52, '#dcdcdc');
-                gradBump.addColorStop(0.80, '#8c8c8c');
-                gradBump.addColorStop(1.0, '#242424');
-
-                bCtx.fillStyle = gradBump;
-                bCtx.fillRect(0, yCenter, width, layerPx + 0.5);
-            }
-
-            for (let i = 0; i < 6500; i++) {
-                const rx = Math.random() * width;
-                const ry = Math.random() * height;
-                const sz = Math.random() * 1.8 + 0.5;
-                const isDark = Math.random() > 0.45;
-                dCtx.fillStyle = isDark ? 'rgba(65, 55, 46, 0.12)' : 'rgba(175, 163, 150, 0.10)';
-                dCtx.fillRect(rx, ry, sz, sz * 0.7);
-            }
-
-            const diffuseMap = new THREE.CanvasTexture(diffCanvas);
-            diffuseMap.wrapS = THREE.RepeatWrapping;
-            diffuseMap.wrapT = THREE.ClampToEdgeWrapping;
-            diffuseMap.repeat.set(1, 1);
-
-            const bumpMap = new THREE.CanvasTexture(bumpCanvas);
-            bumpMap.wrapS = THREE.RepeatWrapping;
-            bumpMap.wrapT = THREE.ClampToEdgeWrapping;
-            bumpMap.repeat.set(1, 1);
-
-            sharedClayTextures = { diffuseMap, bumpMap };
-            return sharedClayTextures;
-        }
-
-        function createTrayectoriaVesselGeometry() {
-            const radialSegs = 160;
-            const heightSegs = 200;
-            const totalHeight = 3.50;
-
-            const geom = new THREE.CylinderGeometry(0.50, 0.56, totalHeight, radialSegs, heightSegs, true);
-            const pos = geom.attributes.position;
-            const v = new THREE.Vector3();
-
-            function evaluateSmoothSilhouette(t) {
-                const baseCore = 0.52 - 0.05 * t;
-                const lowerBelly = 0.34 * Math.exp(-Math.pow((t - 0.23) / 0.165, 2));
-                const midWaistDip = -0.05 * Math.exp(-Math.pow((t - 0.48) / 0.11, 2));
-                const upperTorso = 0.25 * Math.exp(-Math.pow((t - 0.68) / 0.155, 2));
-                const neckCollar = -0.045 * Math.exp(-Math.pow((t - 0.90) / 0.085, 2));
-                const lipFlare = 0.032 * Math.exp(-Math.pow((t - 1.0) / 0.055, 2));
-                return baseCore + lowerBelly + midWaistDip + upperTorso + neckCollar + lipFlare;
-            }
-
-            function smoothBodyWindow(t) {
-                const bot = 1.0 / (1.0 + Math.exp(-(t - 0.06) / 0.025));
-                const top = 1.0 / (1.0 + Math.exp((t - 0.86) / 0.035));
-                return bot * top;
-            }
-
-            for (let i = 0; i < pos.count; i++) {
-                v.fromBufferAttribute(pos, i);
-                const t = (v.y + totalHeight * 0.5) / totalHeight;
-                const theta = Math.atan2(v.z, v.x);
-
-                const baseR = evaluateSmoothSilhouette(t);
-                const env = smoothBodyWindow(t);
-
-                const helixPhase = theta - (t * Math.PI * 2.35 - 0.85);
-                const helicalSwirl = (0.075 * Math.cos(helixPhase) + 0.028 * Math.cos(2.0 * helixPhase - 0.4)) * env;
-
-                const lowerLobeEnv = Math.exp(-Math.pow((t - 0.22) / 0.125, 2));
-                const lowerLobe = lowerLobeEnv * 0.095 * (0.5 + 0.5 * Math.cos(theta - 0.35));
-
-                const upperLobeEnv = Math.exp(-Math.pow((t - 0.67) / 0.135, 2));
-                const upperLobe = upperLobeEnv * 0.065 * (0.5 + 0.5 * Math.cos(theta - 2.65));
-
-                const coilUndulation = Math.sin(t * 96.0 * Math.PI * 2.0) * 0.0055;
-
-                const finalR = baseR + helicalSwirl + lowerLobe + upperLobe + coilUndulation;
-
-                const centerOffsetX = (Math.sin(t * Math.PI * 1.85 - 0.35) * 0.065 + lowerLobeEnv * 0.045) * env;
-                const centerOffsetZ = (Math.cos(t * Math.PI * 1.65) * 0.045) * env;
-
-                pos.setXYZ(
-                    i,
-                    Math.cos(theta) * finalR + centerOffsetX,
-                    v.y,
-                    Math.sin(theta) * finalR + centerOffsetZ
-                );
-            }
-
-            geom.computeVertexNormals();
-            const norm = geom.attributes.normal;
-            const stride = radialSegs + 1;
-            const nA = new THREE.Vector3();
-            const nB = new THREE.Vector3();
-            for (let row = 0; row <= heightSegs; row++) {
-                const idxStart = row * stride;
-                const idxEnd = row * stride + radialSegs;
-                nA.fromBufferAttribute(norm, idxStart);
-                nB.fromBufferAttribute(norm, idxEnd);
-                nA.add(nB).normalize();
-                norm.setXYZ(idxStart, nA.x, nA.y, nA.z);
-                norm.setXYZ(idxEnd, nA.x, nA.y, nA.z);
-            }
-            norm.needsUpdate = true;
-
-            return geom;
-        }
-
-        function buildTrayectoriaModelGroup(mode) {
-            const root = new THREE.Group();
-            const vesselGeom = createTrayectoriaVesselGeometry();
-            const textures = getAuthenticClayTextures();
-
-            if (mode === "wire") {
-                const wireMat = new THREE.MeshBasicMaterial({
-                    color: 0x1a1a1a,
-                    wireframe: true,
-                    transparent: true,
-                    opacity: 0.42
-                });
-                root.add(new THREE.Mesh(vesselGeom, wireMat));
-            } else if (mode === "engraving") {
-                const engraveMat = new THREE.MeshLambertMaterial({
-                    color: 0xd8d8d8,
-                    map: textures.bumpMap,
-                    bumpMap: textures.bumpMap,
-                    bumpScale: 0.032,
-                    side: THREE.DoubleSide
-                });
-                root.add(new THREE.Mesh(vesselGeom, engraveMat));
-            } else {
-                const clayMat = new THREE.MeshLambertMaterial({
-                    color: 0xf7f4f0,
-                    map: textures.diffuseMap,
-                    bumpMap: textures.bumpMap,
-                    bumpScale: 0.022,
-                    side: THREE.DoubleSide
-                });
-                const outerVessel = new THREE.Mesh(vesselGeom, clayMat);
-                root.add(outerVessel);
-
-                const topLipRadius = 0.502;
-                const lipToroid = new THREE.Mesh(
-                    new THREE.TorusGeometry(topLipRadius, 0.022, 20, 120),
-                    clayMat
-                );
-                lipToroid.rotation.x = Math.PI * 0.5;
-                lipToroid.position.y = 3.50 * 0.5 - 0.01;
-                root.add(lipToroid);
-
-                const innerDarkMat = new THREE.MeshLambertMaterial({
-                    color: 0x4a3f36,
-                    bumpMap: textures.bumpMap,
-                    bumpScale: 0.015,
-                    side: THREE.BackSide
-                });
-                const innerNeck = new THREE.Mesh(
-                    new THREE.CylinderGeometry(0.485, 0.44, 1.25, 64, 24, true),
-                    innerDarkMat
-                );
-                innerNeck.position.y = 3.50 * 0.5 - 0.63;
-                root.add(innerNeck);
-
-                const baseDisc = new THREE.Mesh(
-                    new THREE.CircleGeometry(0.52, 64),
-                    new THREE.MeshLambertMaterial({ color: 0x6b5d50 })
-                );
-                baseDisc.rotation.x = Math.PI * 0.5;
-                baseDisc.position.y = -3.50 * 0.5 + 0.01;
-                root.add(baseDisc);
-            }
-
-            return root;
-        }
-
-        function setupSculptureScene(canvasId, initialTiltZ, scaleMultiplier) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return null;
-
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(34, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
-            camera.position.set(0, 0.08, 6.9);
-
-            const renderer = new THREE.WebGLRenderer({
-                canvas: canvas,
-                alpha: true,
-                antialias: true
-            });
-            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-            const hemiLight = new THREE.HemisphereLight(0xf5f0ea, 0x6e6257, 0.85);
-            scene.add(hemiLight);
-
-            const keyLight = new THREE.DirectionalLight(0xfffaf2, 0.72);
-            keyLight.position.set(-3.2, 4.8, 5.5);
-            scene.add(keyLight);
-
-            const fillLight = new THREE.DirectionalLight(0xede6de, 0.28);
-            fillLight.position.set(3.5, 1.0, 4.0);
-            scene.add(fillLight);
-
-            let mesh = buildTrayectoriaModelGroup(materialsPreset[currentMaterialIndex].mode);
-            mesh.rotation.z = initialTiltZ;
-            mesh.rotation.x = 0.16;
-            mesh.scale.setScalar(scaleMultiplier);
-            scene.add(mesh);
-
-            let isDragging = false;
-            let prevX = 0, prevY = 0;
-            let targetRotY = -0.15, targetRotX = 0.16;
-
-            canvas.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                prevX = e.clientX;
-                prevY = e.clientY;
-            });
-
-            window.addEventListener('mouseup', () => { isDragging = false; });
-
-            window.addEventListener('mousemove', (e) => {
-                if (isDragging) {
-                    const dx = e.clientX - prevX;
-                    const dy = e.clientY - prevY;
-                    targetRotY += dx * 0.011;
-                    targetRotX += dy * 0.009;
-                    prevX = e.clientX;
-                    prevY = e.clientY;
-                } else {
-                    const normX = (e.clientX / window.innerWidth) - 0.5;
-                    const normY = (e.clientY / window.innerHeight) - 0.5;
-                    targetRotY = -0.15 + normX * 0.55;
-                    targetRotX = 0.16 + normY * 0.22;
-                }
-            });
-
-            canvas.addEventListener('touchstart', (e) => {
-                if (e.touches.length === 1) {
-                    isDragging = true;
-                    prevX = e.touches[0].clientX;
-                    prevY = e.touches[0].clientY;
-                }
-            }, { passive: true });
-
-            window.addEventListener('touchend', () => { isDragging = false; });
-
-            window.addEventListener('touchmove', (e) => {
-                if (isDragging && e.touches.length === 1) {
-                    const dx = e.touches[0].clientX - prevX;
-                    const dy = e.touches[0].clientY - prevY;
-                    targetRotY += dx * 0.012;
-                    targetRotX += dy * 0.01;
-                    prevX = e.touches[0].clientX;
-                    prevY = e.touches[0].clientY;
-                }
-            }, { passive: true });
-
-            return {
-                scene,
-                camera,
-                renderer,
-                mesh,
-                canvas,
-                initialTiltZ,
-                scaleMultiplier,
-                getTarget: () => ({ targetRotX, targetRotY }),
-                rebuildMesh: (newMode) => {
-                    scene.remove(mesh);
-                    mesh = buildTrayectoriaModelGroup(newMode);
-                    mesh.rotation.z = initialTiltZ;
-                    mesh.scale.setScalar(scaleMultiplier);
-                    scene.add(mesh);
-                },
-                getMesh: () => mesh
-            };
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 3400);
-        }
-
-        function scrollToFrame(id) {
-            const el = document.getElementById(id);
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function jumpToStudy(projectIndex) {
-            switchFrame3Study(projectIndex);
-            scrollToFrame('frame-3');
-        }
-
-        function switchFrame3Study(projectIndex) {
-            currentFrame3Project = projectIndex;
+        let currentFrame3Project = 2;
+        let currentFrame3PhotoIdx = 0;
+
+        function switchFrame3Study(index) {
+            currentFrame3Project = index;
             currentFrame3PhotoIdx = 0;
-            const p = portfolioProjects[projectIndex];
+            const p = portfolioProjects[index];
 
             document.getElementById('f3-giant-title').textContent = p.giantTitle;
-            document.getElementById('f3-page-indicator').textContent = p.projectName.toUpperCase();
-            const yearBadge = document.getElementById('f3-project-year');
-            if (yearBadge) yearBadge.textContent = p.year || '2026';
-            document.getElementById('f3-counter-badge').textContent = `0${projectIndex + 1} / 06`;
-            document.getElementById('f3-kicker').textContent = `${p.projectName.toUpperCase()} · ${p.year || '2026'}`;
+            document.getElementById('f3-kicker').textContent = p.kicker;
             document.getElementById('f3-description').textContent = p.description;
             document.getElementById('f3-description-2').textContent = p.body2;
+            document.getElementById('f3-page-indicator').textContent = p.projectName.toUpperCase();
+            document.getElementById('f3-counter-badge').textContent = `0${index + 1} / 06`;
             document.getElementById('f3-meta-category').textContent = p.category;
             document.getElementById('f3-meta-discipline').textContent = p.discipline;
             document.getElementById('f3-meta-methods').textContent = p.methods;
             document.getElementById('f3-meta-context').textContent = `${p.context} · ${p.team}`;
 
+            const yearEl = document.getElementById('f3-project-year');
+            if (yearEl) {
+                yearEl.textContent = p.year;
+            }
+
             const extLink = document.getElementById('f3-external-url');
             extLink.href = p.wikiUrl;
+            extLink.textContent = "documentación wiki e[ad] ↗";
 
             const wikiBox = document.getElementById('f3-wiki-links-box');
             if (wikiBox) {
-                let html = `
-                    <a href="${p.wikiUrl}" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 px-2.5 bg-ink text-white hover:bg-neutral-800 transition text-[10.5px] font-semibold flex items-center justify-between">
-                        <span class="truncate">${p.wikiLabel}</span>
-                    </a>
-                `;
-                if (p.secondaryLinks) {
-                    p.secondaryLinks.forEach(sec => {
-                        html += `
-                            <a href="${sec.url}" target="_blank" rel="noopener noreferrer" class="w-full py-1 px-2.5 border border-neutral-300 bg-offpaper hover:border-ink transition text-[10px] font-medium flex items-center justify-between text-ink">
-                                <span class="truncate">${sec.label}</span>
-                            </a>
-                        `;
-                    });
-                }
-                wikiBox.innerHTML = html;
-            }
-
-            renderProjectMedia();
-
-            for (let i = 0; i < 6; i++) {
-                const btn = document.getElementById('f3-tab-' + i);
-                if (btn) {
-                    btn.className = (i === projectIndex)
-                        ? "font-bold text-ink underline underline-offset-4"
-                        : "hover:text-ink transition text-ink/75";
-                }
-            }
-        }
-
-        function stepFrame3Project(delta) {
-            const next = (currentFrame3Project + delta + portfolioProjects.length) % portfolioProjects.length;
-            switchFrame3Study(next);
-        }
-
-        function openProjectModal(index, photoIdx = 0) {
-            currentModalProject = index;
-            currentModalPhotoIdx = photoIdx;
-            const p = portfolioProjects[index];
-
-            document.getElementById('modal-index').textContent = `${p.projectName.toUpperCase()} · ${p.year}`;
-            document.getElementById('modal-category-badge').textContent = p.category;
-            document.getElementById('modal-title').textContent = p.projectName;
-            document.getElementById('modal-subtitle').textContent = p.subtitle;
-            document.getElementById('modal-body-1').textContent = p.description;
-            document.getElementById('modal-body-2').textContent = p.body2;
-
-            document.getElementById('modal-tech-discipline').textContent = p.discipline;
-            document.getElementById('modal-tech-methods').textContent = p.methods;
-            document.getElementById('modal-tech-context').textContent = p.context;
-            document.getElementById('modal-tech-team').textContent = p.team;
-
-            renderModalGalleryImage();
-
-            const wikiBar = document.getElementById('modal-wiki-bar');
-            if (wikiBar) {
-                let linksHTML = `
-                    <a href="${p.wikiUrl}" target="_blank" rel="noopener noreferrer" class="bg-ink text-white px-3.5 py-1.5 text-xs font-semibold hover:bg-neutral-800 transition">
+                let linksHtml = `
+                    <a href="${p.wikiUrl}" target="_blank" rel="noopener noreferrer" class="block w-full py-1.5 px-2.5 bg-ink text-white text-[10.5px] font-medium hover:bg-neutral-800 transition truncate">
                         ${p.wikiLabel}
                     </a>
                 `;
-                if (p.secondaryLinks) {
+                if (p.secondaryLinks && p.secondaryLinks.length) {
                     p.secondaryLinks.forEach(sec => {
-                        linksHTML += `
-                            <a href="${sec.url}" target="_blank" rel="noopener noreferrer" class="bg-white border border-neutral-300 text-ink px-3 py-1.5 text-xs font-medium hover:border-ink transition">
+                        linksHtml += `
+                            <a href="${sec.url}" target="_blank" rel="noopener noreferrer" class="block w-full py-1 px-2.5 bg-offpaper border border-neutral-300 text-ink text-[10px] font-medium hover:border-ink transition truncate">
                                 ${sec.label}
                             </a>
                         `;
                     });
                 }
-                wikiBar.innerHTML = linksHTML;
+                wikiBox.innerHTML = linksHtml;
             }
 
-            const tagsContainer = document.getElementById('modal-tags');
-            tagsContainer.innerHTML = '';
-            p.tags.forEach(tag => {
-                const span = document.createElement('span');
-                span.className = "text-[10.5px] px-2.5 py-1 bg-offpaper border border-neutral-300 font-medium";
-                span.textContent = tag;
-                tagsContainer.appendChild(span);
-            });
+            renderFrame3ActivePhoto();
 
-            const modalLink = document.getElementById('modal-link');
-            modalLink.href = p.wikiUrl;
-            modalLink.textContent = p.wikiLabel;
-
-            document.getElementById('project-modal').classList.remove('hidden');
+            for (let i = 0; i < 6; i++) {
+                const tab = document.getElementById(`f3-tab-${i}`);
+                if (!tab) continue;
+                if (i === index) {
+                    tab.className = "font-bold text-ink underline underline-offset-4 transition";
+                } else {
+                    tab.className = "hover:text-ink text-ink/75 transition";
+                }
+            }
         }
 
-        function renderModalGalleryImage() {
-            const p = portfolioProjects[currentModalProject];
-            const activeItem = (p.gallery && p.gallery[currentModalPhotoIdx]) || p.gallery[0];
-            const endpoints = getDriveEndpoints(activeItem.id);
-            const zoomClass = activeItem.detailZoom ? 'photo-detail-zoom' : '';
+        function renderFrame3ActivePhoto() {
+            const p = portfolioProjects[currentFrame3Project];
+            const centerFrame = document.getElementById('f3-center-frame');
+            if (centerFrame) {
+                centerFrame.onclick = () => openProjectModal(currentFrame3Project);
+                centerFrame.innerHTML = renderProjectCoverMarkup(p, currentFrame3PhotoIdx);
+            }
 
-            const mediaContainer = document.getElementById('modal-media-container');
-            mediaContainer.innerHTML = `
-                <div class="bg-white p-3 flex flex-col items-center">
-                    <div class="photo-uniform-frame">
-                        <img src="${endpoints.primary}"
-                             data-fallback-1="${endpoints.fallback1}"
-                             data-fallback-2="${endpoints.fallback2}"
-                             data-fallback-step="0"
-                             onerror="window.handleDriveImgError(this)"
-                             alt="${p.projectName} · ${activeItem.num}"
-                             class="w-full h-full object-cover ${zoomClass} drive-photo-render" />
-                    </div>
-                    <div class="w-full mt-2 pt-2 border-t border-neutral-200 flex items-center justify-between text-[11px] font-mono text-muted">
-                        <span class="font-bold text-ink">${p.projectName}</span>
-                        <span>${activeItem.num} / 02</span>
-                    </div>
-                </div>
-            `;
-
-            const thumbsBar = document.getElementById('modal-thumbs-bar');
-            if (p.gallery) {
-                thumbsBar.innerHTML = p.gallery.slice(0, 2).map((gItem, idx) => {
-                    const ep = getDriveEndpoints(gItem.id);
-                    const active = idx === currentModalPhotoIdx;
-                    const thumbZoom = gItem.detailZoom ? 'photo-detail-zoom' : '';
+            const thumbsContainer = document.getElementById('f3-gallery-thumbs');
+            if (thumbsContainer) {
+                thumbsContainer.innerHTML = p.gallery.slice(0, 2).map((item, idx) => {
+                    const ep = getDriveEndpoints(item.id);
+                    const activeClass = idx === currentFrame3PhotoIdx ? 'border-ink ring-1 ring-ink' : 'border-neutral-200 opacity-80 hover:opacity-100';
+                    const zoomClass = item.detailZoom ? 'photo-detail-zoom' : '';
                     return `
-                        <button onclick="selectModalPhoto(${idx})" class="border ${active ? 'border-ink bg-ink text-white' : 'border-neutral-300 bg-offpaper text-ink hover:border-ink'} text-[11px] font-medium transition overflow-hidden flex flex-col">
+                        <button onclick="selectFrame3GalleryImage(${idx})" class="text-left group focus:outline-none border ${activeClass} bg-offpaper p-1.5 transition">
                             <div class="photo-uniform-frame">
-                                <img src="${ep.primary}" data-fallback-1="${ep.fallback1}" data-fallback-2="${ep.fallback2}" data-fallback-step="0" onerror="window.handleDriveImgError(this)" alt="${p.projectName} · ${gItem.num}" class="w-full h-full object-cover ${thumbZoom} drive-photo-render" />
+                                <img src="${ep.primary}"
+                                     data-fallback-1="${ep.fallback1}"
+                                     data-fallback-2="${ep.fallback2}"
+                                     data-fallback-step="0"
+                                     onerror="window.handleDriveImgError(this)"
+                                     alt="${p.projectName} · ${item.num}"
+                                     class="w-full h-full object-cover ${zoomClass}" />
                             </div>
-                            <div class="px-2.5 py-1.5 flex items-center justify-between w-full">
-                                <span class="truncate">${p.projectName}</span>
-                                <span class="font-mono font-bold">${gItem.num}</span>
+                            <div class="flex items-center justify-between mt-1.5 px-0.5 text-[10px] font-mono">
+                                <span class="font-semibold text-ink truncate">${p.projectName}</span>
+                                <span class="text-muted">${item.num}</span>
                             </div>
                         </button>
                     `;
@@ -1743,57 +1296,157 @@
             }
         }
 
-        function selectModalPhoto(idx) {
+        function selectFrame3GalleryImage(photoIdx) {
+            currentFrame3PhotoIdx = photoIdx;
+            renderFrame3ActivePhoto();
+        }
+
+        function stepFrame3Project(dir) {
+            const next = (currentFrame3Project + dir + portfolioProjects.length) % portfolioProjects.length;
+            switchFrame3Study(next);
+        }
+
+        function jumpToStudy(index) {
+            switchFrame3Study(index);
+            document.getElementById('frame-3').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        let currentModalProject = 2;
+        let currentModalPhotoIdx = 0;
+
+        function openProjectModal(index) {
+            currentModalProject = index;
+            currentModalPhotoIdx = 0;
+            const p = portfolioProjects[index];
+
+            document.getElementById('modal-index').textContent = `0${index + 1} · 01-02`;
+            document.getElementById('modal-category-badge').textContent = p.category;
+            document.getElementById('modal-title').textContent = p.projectName;
+            document.getElementById('modal-subtitle').textContent = p.subtitle;
+
+            renderModalActivePhoto();
+
+            const wikiBar = document.getElementById('modal-wiki-bar');
+            let wikiBarHtml = `
+                <a href="${p.wikiUrl}" target="_blank" rel="noopener noreferrer" class="text-[11px] font-bold bg-ink text-white px-3 py-1.5 hover:bg-neutral-800 transition">
+                    ${p.wikiLabel}
+                </a>
+            `;
+            if (p.secondaryLinks && p.secondaryLinks.length) {
+                p.secondaryLinks.forEach(sec => {
+                    wikiBarHtml += `
+                        <a href="${sec.url}" target="_blank" rel="noopener noreferrer" class="text-[11px] font-medium bg-white border border-neutral-300 text-ink px-3 py-1.5 hover:border-ink transition">
+                            ${sec.label}
+                        </a>
+                    `;
+                });
+            }
+            wikiBar.innerHTML = wikiBarHtml;
+
+            document.getElementById('modal-body-1').textContent = p.description;
+            document.getElementById('modal-body-2').textContent = p.body2;
+            document.getElementById('modal-tech-discipline').textContent = p.discipline;
+            document.getElementById('modal-tech-methods').textContent = p.methods;
+            document.getElementById('modal-tech-context').textContent = p.context;
+            document.getElementById('modal-tech-team').textContent = p.team;
+
+            const linkEl = document.getElementById('modal-link');
+            linkEl.href = p.wikiUrl;
+
+            const tagsContainer = document.getElementById('modal-tags');
+            tagsContainer.innerHTML = p.tags.map(tag =>
+                `<span class="text-[11px] px-2.5 py-1 bg-offpaper border border-neutral-300 font-medium">${tag}</span>`
+            ).join('');
+
+            const modal = document.getElementById('project-modal');
+            modal.classList.remove('hidden');
+        }
+
+        function renderModalActivePhoto() {
+            const p = portfolioProjects[currentModalProject];
+            const mediaContainer = document.getElementById('modal-media-container');
+            const activeItem = p.gallery[currentModalPhotoIdx] || p.gallery[0];
+            const ep = getDriveEndpoints(activeItem.id);
+            const zoomClass = activeItem.detailZoom ? 'photo-detail-zoom' : '';
+
+            mediaContainer.innerHTML = `
+                <div class="photo-uniform-frame bg-offpaper">
+                    <img src="${ep.primary}" 
+                         data-fallback-1="${ep.fallback1}"
+                         data-fallback-2="${ep.fallback2}"
+                         data-fallback-step="0"
+                         onerror="window.handleDriveImgError(this)"
+                         alt="${p.projectName} · ${activeItem.num}" 
+                         class="w-full h-full object-cover ${zoomClass}" />
+                    <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                        <span class="bg-ink/85 text-white text-[10.5px] font-mono px-2.5 py-1 uppercase">
+                            ${p.projectName}
+                        </span>
+                        <span class="bg-paper/95 text-ink text-[10.5px] font-mono font-bold px-2.5 py-1 border border-neutral-300">
+                            ${activeItem.num} / 02
+                        </span>
+                    </div>
+                </div>
+            `;
+
+            const modalThumbs = document.getElementById('modal-thumbs-bar');
+            modalThumbs.innerHTML = p.gallery.slice(0, 2).map((item, idx) => {
+                const thumbEp = getDriveEndpoints(item.id);
+                const isSelected = idx === currentModalPhotoIdx;
+                const itemZoom = item.detailZoom ? 'photo-detail-zoom' : '';
+                return `
+                    <button onclick="selectModalGalleryImage(${idx})" 
+                            class="text-left border p-1.5 transition bg-offpaper ${isSelected ? 'border-ink ring-1 ring-ink' : 'border-neutral-200 opacity-75 hover:opacity-100'}">
+                        <div class="photo-uniform-frame">
+                            <img src="${thumbEp.primary}"
+                                 data-fallback-1="${thumbEp.fallback1}"
+                                 data-fallback-2="${thumbEp.fallback2}"
+                                 data-fallback-step="0"
+                                 onerror="window.handleDriveImgError(this)"
+                                 alt="${p.projectName} · ${item.num}"
+                                 class="w-full h-full object-cover ${itemZoom}" />
+                        </div>
+                        <div class="flex items-center justify-between mt-1.5 px-0.5 text-[10.5px] font-mono">
+                            <span class="font-bold text-ink">${p.projectName}</span>
+                            <span class="text-muted">${item.num}</span>
+                        </div>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectModalGalleryImage(idx) {
             currentModalPhotoIdx = idx;
-            renderModalGalleryImage();
+            renderModalActivePhoto();
         }
 
         function closeProjectModal() {
             document.getElementById('project-modal').classList.add('hidden');
         }
 
+        function prevModalProject() {
+            const next = (currentModalProject - 1 + portfolioProjects.length) % portfolioProjects.length;
+            openProjectModal(next);
+        }
+
         function nextModalProject() {
             const next = (currentModalProject + 1) % portfolioProjects.length;
-            openProjectModal(next, 0);
-        }
-
-        function prevModalProject() {
-            const prev = (currentModalProject - 1 + portfolioProjects.length) % portfolioProjects.length;
-            openProjectModal(prev, 0);
-        }
-
-        function cycleSculptureMaterial() {
-            currentMaterialIndex = (currentMaterialIndex + 1) % materialsPreset.length;
-            const preset = materialsPreset[currentMaterialIndex];
-
-            const floatLabel = document.getElementById('floating-3d-label');
-            if (floatLabel) floatLabel.textContent = preset.short;
-
-            if (closingSceneObj) closingSceneObj.rebuildMesh(preset.mode);
-        }
-
-        function toggleColorEditorialMode() {
-            const body = document.getElementById('app-body');
-            const btn = document.getElementById('color-toggle-btn');
-            body.classList.toggle('bw-editorial-mode');
-            btn.textContent = body.classList.contains('bw-editorial-mode') ? "Modo B&N Editorial" : "Color Original";
-        }
-
-        function togglePresentationMode() {
-            const body = document.getElementById('app-body');
-            const btn = document.getElementById('mode-toggle-btn');
-            body.classList.toggle('frame-study-mode');
-            btn.textContent = body.classList.contains('frame-study-mode') ? "Vista Continua" : "Vista 5 Láminas";
+            openProjectModal(next);
         }
 
         function copyEmail() {
-            const tempInput = document.createElement('input');
-            tempInput.value = 'matias.arce.c@mail.pucv.cl';
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            showToast('Correo copiado: matias.arce.c@mail.pucv.cl');
+            navigator.clipboard.writeText("matias.arce.c@mail.pucv.cl");
+            showToast("Correo copiado: matias.arce.c@mail.pucv.cl");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2600);
         }
 
         window.addEventListener('keydown', (e) => {
@@ -1802,40 +1455,426 @@
             }
         });
 
-        let closingSceneObj = null;
+        let sculptureViewers = [];
+        let currentSculptureMode = 'wire';
+        let sharedClayBumpTexture = null;
+        let sharedClayColorTexture = null;
 
-        window.onload = function () {
-            closingSceneObj = setupSculptureScene('closing-sculpture-canvas', 0.28, 1.20);
-            switchFrame3Study(2);
-            renderYouTubeSection(false);
+        function getClayTextures() {
+            if (sharedClayBumpTexture && sharedClayColorTexture) {
+                return { bump: sharedClayBumpTexture, map: sharedClayColorTexture };
+            }
 
-            window.addEventListener('resize', () => {
-                if (!closingSceneObj || !closingSceneObj.canvas) return;
-                const w = closingSceneObj.canvas.clientWidth;
-                const h = closingSceneObj.canvas.clientHeight;
-                if (w > 0 && h > 0) {
-                    closingSceneObj.camera.aspect = w / h;
-                    closingSceneObj.camera.updateProjectionMatrix();
-                    closingSceneObj.renderer.setSize(w, h);
-                }
-            });
+            const bumpCanvas = document.createElement('canvas');
+            bumpCanvas.width = 512;
+            bumpCanvas.height = 1024;
+            const bCtx = bumpCanvas.getContext('2d');
 
-            function animate() {
-                requestAnimationFrame(animate);
-                const time = performance.now() * 0.0006;
+            const colCanvas = document.createElement('canvas');
+            colCanvas.width = 512;
+            colCanvas.height = 1024;
+            const cCtx = colCanvas.getContext('2d');
 
-                if (closingSceneObj && closingSceneObj.getMesh()) {
-                    const mesh = closingSceneObj.getMesh();
-                    const target = closingSceneObj.getTarget();
-                    mesh.rotation.y += (target.targetRotY - time * 0.45 - mesh.rotation.y) * 0.06;
-                    mesh.rotation.x += (target.targetRotX - mesh.rotation.x) * 0.06;
-                    mesh.position.y = Math.cos(time * 2.0) * 0.08;
-                    closingSceneObj.renderer.render(closingSceneObj.scene, closingSceneObj.camera);
+            const numLayers = 155;
+            for (let y = 0; y < 1024; y++) {
+                const layerPhase = (y / 1024) * numLayers * Math.PI * 2;
+                const rib = (Math.sin(layerPhase) * 0.5 + 0.5);
+                const ribSharp = Math.pow(rib, 0.72);
+
+                const rowJitter = Math.sin(y * 0.37) * 3.5 + Math.cos(y * 0.83) * 2.0;
+
+                const bVal = Math.max(0, Math.min(255, Math.floor(35 + ribSharp * 210 + rowJitter)));
+                bCtx.fillStyle = `rgb(${bVal},${bVal},${bVal})`;
+                bCtx.fillRect(0, y, 512, 1);
+
+                const shadowFactor = 0.85 + ribSharp * 0.19 + (rowJitter / 255);
+                const r = Math.min(255, Math.floor(156 * shadowFactor));
+                const g = Math.min(255, Math.floor(142 * shadowFactor));
+                const b = Math.min(255, Math.floor(129 * shadowFactor));
+                cCtx.fillStyle = `rgb(${r},${g},${b})`;
+                cCtx.fillRect(0, y, 512, 1);
+
+                if (y % 6 === 0) {
+                    cCtx.fillStyle = `rgba(92, 81, 72, 0.16)`;
+                    cCtx.fillRect(0, y, 512, 1);
                 }
             }
 
+            sharedClayBumpTexture = new THREE.CanvasTexture(bumpCanvas);
+            sharedClayBumpTexture.wrapS = THREE.RepeatWrapping;
+            sharedClayBumpTexture.wrapT = THREE.ClampToEdgeWrapping;
+
+            sharedClayColorTexture = new THREE.CanvasTexture(colCanvas);
+            sharedClayColorTexture.wrapS = THREE.RepeatWrapping;
+            sharedClayColorTexture.wrapT = THREE.ClampToEdgeWrapping;
+
+            return { bump: sharedClayBumpTexture, map: sharedClayColorTexture };
+        }
+
+        function createMaterialForSculpture(mode) {
+            if (mode === 'wire') {
+                return new THREE.MeshBasicMaterial({
+                    color: 0x161616,
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.32
+                });
+            }
+
+            const textures = getClayTextures();
+            return new THREE.MeshLambertMaterial({
+                color: 0xffffff,
+                map: textures.map,
+                bumpMap: textures.bump,
+                bumpScale: 0.048,
+                side: THREE.DoubleSide
+            });
+        }
+
+        function evaluateVesselPoint(u, v, target) {
+            const theta = u * Math.PI * 2;
+            const totalHeight = 3.7;
+            const y = (v - 0.5) * totalHeight;
+
+            const gBell = Math.exp(-Math.pow((v - 0.25) / 0.19, 2));
+            const gWaist = Math.exp(-Math.pow((v - 0.49) / 0.14, 2));
+            const gUpper = Math.exp(-Math.pow((v - 0.69) / 0.16, 2));
+            const gNeck = Math.exp(-Math.pow((v - 0.89) / 0.11, 2));
+            const gRim = Math.exp(-Math.pow((v - 1.0) / 0.06, 2));
+
+            let baseR = 0.88
+                + 0.44 * gBell
+                - 0.15 * gWaist
+                + 0.22 * gUpper
+                - 0.20 * gNeck
+                + 0.04 * gRim;
+
+            const lobeRightLow = 0.25 * Math.exp(-Math.pow((v - 0.26) / 0.13, 2)) * Math.cos(theta - 0.35);
+            const lobeLeftMid = 0.16 * Math.exp(-Math.pow((v - 0.56) / 0.15, 2)) * Math.cos(theta - 3.25);
+            const lobeRightHigh = 0.14 * Math.exp(-Math.pow((v - 0.72) / 0.14, 2)) * Math.cos(theta - 0.85);
+            const ovality = 0.05 * Math.sin(v * Math.PI) * Math.cos(2 * (theta - v * 2.4));
+
+            const r = baseR + lobeRightLow + lobeLeftMid + lobeRightHigh + ovality;
+
+            const cx = 0.10 * Math.exp(-Math.pow((v - 0.27) / 0.16, 2))
+                     - 0.07 * Math.exp(-Math.pow((v - 0.58) / 0.17, 2))
+                     + 0.05 * Math.exp(-Math.pow((v - 0.74) / 0.15, 2));
+            const cz = 0.05 * Math.sin(v * Math.PI * 1.8);
+
+            target.x = cx + r * Math.cos(theta);
+            target.y = y;
+            target.z = cz + r * Math.sin(theta);
+        }
+
+        function buildContinuousHelicalVesselGeometry() {
+            const radialSegs = 128;
+            const heightSegs = 200;
+            const wallThickness = 0.095;
+
+            const geometry = new THREE.BufferGeometry();
+            const positions = [];
+            const uvs = [];
+            const indices = [];
+
+            const pt = new THREE.Vector3();
+
+            for (let iy = 0; iy <= heightSegs; iy++) {
+                const v = iy / heightSegs;
+                for (let ix = 0; ix <= radialSegs; ix++) {
+                    const u = ix / radialSegs;
+                    evaluateVesselPoint(u, v, pt);
+                    positions.push(pt.x, pt.y, pt.z);
+                    uvs.push(u, v);
+                }
+            }
+
+            const innerOffset = positions.length / 3;
+            for (let iy = 0; iy <= heightSegs; iy++) {
+                const v = iy / heightSegs;
+                for (let ix = 0; ix <= radialSegs; ix++) {
+                    const u = ix / radialSegs;
+                    evaluateVesselPoint(u, v, pt);
+                    const angle = u * Math.PI * 2;
+                    positions.push(
+                        pt.x - Math.cos(angle) * wallThickness,
+                        pt.y,
+                        pt.z - Math.sin(angle) * wallThickness
+                    );
+                    uvs.push(u, v);
+                }
+            }
+
+            const stride = radialSegs + 1;
+
+            for (let iy = 0; iy < heightSegs; iy++) {
+                for (let ix = 0; ix < radialSegs; ix++) {
+                    const a = iy * stride + ix;
+                    const b = iy * stride + (ix + 1);
+                    const c = (iy + 1) * stride + (ix + 1);
+                    const d = (iy + 1) * stride + ix;
+                    indices.push(a, b, d);
+                    indices.push(b, c, d);
+                }
+            }
+
+            for (let iy = 0; iy < heightSegs; iy++) {
+                for (let ix = 0; ix < radialSegs; ix++) {
+                    const a = innerOffset + iy * stride + ix;
+                    const b = innerOffset + iy * stride + (ix + 1);
+                    const c = innerOffset + (iy + 1) * stride + (ix + 1);
+                    const d = innerOffset + (iy + 1) * stride + ix;
+                    indices.push(a, d, b);
+                    indices.push(b, d, c);
+                }
+            }
+
+            const topOuterStart = heightSegs * stride;
+            const topInnerStart = innerOffset + heightSegs * stride;
+            for (let ix = 0; ix < radialSegs; ix++) {
+                const a = topOuterStart + ix;
+                const b = topOuterStart + ix + 1;
+                const c = topInnerStart + ix + 1;
+                const d = topInnerStart + ix;
+                indices.push(a, b, c);
+                indices.push(a, c, d);
+            }
+
+            const bottomCenterIdx = positions.length / 3;
+            positions.push(0, -1.85, 0);
+            uvs.push(0.5, 0);
+            for (let ix = 0; ix < radialSegs; ix++) {
+                indices.push(bottomCenterIdx, ix + 1, ix);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+            geometry.setIndex(indices);
+            geometry.computeVertexNormals();
+
+            const normals = geometry.attributes.normal;
+            for (let iy = 0; iy <= heightSegs; iy++) {
+                const firstIdx = iy * stride;
+                const lastIdx = iy * stride + radialSegs;
+                const nx = (normals.getX(firstIdx) + normals.getX(lastIdx)) * 0.5;
+                const ny = (normals.getY(firstIdx) + normals.getY(lastIdx)) * 0.5;
+                const nz = (normals.getZ(firstIdx) + normals.getZ(lastIdx)) * 0.5;
+                const len = Math.hypot(nx, ny, nz) || 1;
+                normals.setXYZ(firstIdx, nx / len, ny / len, nz / len);
+                normals.setXYZ(lastIdx, nx / len, ny / len, nz / len);
+            }
+            normals.needsUpdate = true;
+
+            return geometry;
+        }
+
+        function buildGrasshopperCurvesGroup() {
+            const curvesGroup = new THREE.Group();
+            const lineMatPrimary = new THREE.LineBasicMaterial({
+                color: 0x0D0D0D,
+                transparent: true,
+                opacity: 0.72
+            });
+            const lineMatSecondary = new THREE.LineBasicMaterial({
+                color: 0x555555,
+                transparent: true,
+                opacity: 0.38
+            });
+
+            const pt = new THREE.Vector3();
+
+            const numRings = 44;
+            const ringRadialPts = 96;
+            for (let r = 0; r <= numRings; r++) {
+                const v = r / numRings;
+                const ringPoints = [];
+                for (let i = 0; i <= ringRadialPts; i++) {
+                    const u = i / ringRadialPts;
+                    evaluateVesselPoint(u, v, pt);
+                    ringPoints.push(pt.clone());
+                }
+                const ringGeo = new THREE.BufferGeometry().setFromPoints(ringPoints);
+                const mat = (r % 4 === 0) ? lineMatPrimary : lineMatSecondary;
+                curvesGroup.add(new THREE.Line(ringGeo, mat));
+            }
+
+            const numMeridians = 24;
+            const meridianSteps = 90;
+            for (let m = 0; m < numMeridians; m++) {
+                const uBase = m / numMeridians;
+                const merPoints = [];
+                for (let j = 0; j <= meridianSteps; j++) {
+                    const v = j / meridianSteps;
+                    const uHelix = (uBase + v * 0.18) % 1.0;
+                    evaluateVesselPoint(uHelix, v, pt);
+                    merPoints.push(pt.clone());
+                }
+                const merGeo = new THREE.BufferGeometry().setFromPoints(merPoints);
+                const mat = (m % 3 === 0) ? lineMatPrimary : lineMatSecondary;
+                curvesGroup.add(new THREE.Line(merGeo, mat));
+            }
+
+            return curvesGroup;
+        }
+
+        function populateSceneWithCurrentMode(viewer) {
+            while (viewer.rootGroup.children.length > 0) {
+                const child = viewer.rootGroup.children[0];
+                viewer.rootGroup.remove(child);
+            }
+
+            const vesselGeo = buildContinuousHelicalVesselGeometry();
+            const mat = createMaterialForSculpture(currentSculptureMode);
+            const mesh = new THREE.Mesh(vesselGeo, mat);
+            viewer.rootGroup.add(mesh);
+
+            if (currentSculptureMode === 'wire') {
+                const ghCurves = buildGrasshopperCurvesGroup();
+                viewer.rootGroup.add(ghCurves);
+            }
+        }
+
+        function createSculptureScene(canvasId, config) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return null;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+            camera.position.set(0, 0.1, config.cameraZ || 7.5);
+
+            const renderer = new THREE.WebGLRenderer({
+                canvas: canvas,
+                alpha: true,
+                antialias: true,
+                powerPreference: "high-performance"
+            });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const hemiLight = new THREE.HemisphereLight(0xfffaf2, 0x544b43, 1.05);
+            scene.add(hemiLight);
+
+            const keyLight = new THREE.DirectionalLight(0xfff8ee, 0.42);
+            keyLight.position.set(3.2, 5.5, 4.5);
+            scene.add(keyLight);
+
+            const softFill = new THREE.DirectionalLight(0xe5ddd5, 0.22);
+            softFill.position.set(-4.0, -1.5, 2.5);
+            scene.add(softFill);
+
+            const rootGroup = new THREE.Group();
+            rootGroup.rotation.z = config.tiltZ || 0.04;
+            rootGroup.rotation.x = config.tiltX || 0.11;
+            rootGroup.rotation.y = config.tiltY || 0.25;
+            rootGroup.scale.setScalar(config.scale || 1.0);
+            scene.add(rootGroup);
+
+            const viewerObj = {
+                canvas,
+                scene,
+                camera,
+                renderer,
+                rootGroup,
+                config,
+                targetRotX: config.tiltX || 0.11,
+                targetRotY: config.tiltY || 0.25
+            };
+
+            populateSceneWithCurrentMode(viewerObj);
+
+            function resize() {
+                const rect = canvas.parentElement.getBoundingClientRect();
+                const w = Math.max(rect.width, 220);
+                const h = Math.max(rect.height, 220);
+                renderer.setSize(w, h, false);
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            let isPointerDown = false;
+            let startX = 0;
+            let startY = 0;
+
+            canvas.addEventListener('pointerdown', (e) => {
+                isPointerDown = true;
+                startX = e.clientX;
+                startY = e.clientY;
+            });
+
+            window.addEventListener('pointerup', () => {
+                isPointerDown = false;
+            });
+
+            window.addEventListener('pointermove', (e) => {
+                if (isPointerDown) {
+                    const dx = (e.clientX - startX) * 0.011;
+                    const dy = (e.clientY - startY) * 0.011;
+                    viewerObj.targetRotY += dx;
+                    viewerObj.targetRotX = Math.max(-0.55, Math.min(0.65, viewerObj.targetRotX + dy));
+                    startX = e.clientX;
+                    startY = e.clientY;
+                } else {
+                    const normX = (e.clientX / window.innerWidth) - 0.5;
+                    viewerObj.targetRotY += normX * 0.002;
+                }
+            });
+
+            return viewerObj;
+        }
+
+        function setSculptureMode(mode) {
+            currentSculptureMode = mode;
+            sculptureViewers.forEach(v => {
+                if (!v) return;
+                populateSceneWithCurrentMode(v);
+            });
+
+            const btnWire = document.getElementById('btn-mode-wire');
+            const btnClay = document.getElementById('btn-mode-clay');
+            if (btnWire && btnClay) {
+                if (mode === 'wire') {
+                    btnWire.className = "text-[10.5px] font-mono font-semibold px-2.5 py-1 bg-ink text-white transition";
+                    btnClay.className = "text-[10.5px] font-mono font-semibold px-2.5 py-1 text-ink hover:bg-neutral-200 transition";
+                } else {
+                    btnClay.className = "text-[10.5px] font-mono font-semibold px-2.5 py-1 bg-ink text-white transition";
+                    btnWire.className = "text-[10.5px] font-mono font-semibold px-2.5 py-1 text-ink hover:bg-neutral-200 transition";
+                }
+            }
+        }
+
+        function initAllSculptures() {
+            const closingViewer = createSculptureScene('closing-sculpture-canvas', {
+                cameraZ: 7.4,
+                tiltZ: 0.14,
+                tiltX: 0.15,
+                tiltY: -0.35,
+                scale: 1.08
+            });
+
+            sculptureViewers = [closingViewer].filter(Boolean);
+
+            const clock = new THREE.Clock();
+
+            function animate() {
+                requestAnimationFrame(animate);
+                const t = clock.getElapsedTime();
+
+                sculptureViewers.forEach((v, idx) => {
+                    v.rootGroup.rotation.y += ((v.targetRotY + t * 0.18) - v.rootGroup.rotation.y) * 0.05;
+                    v.rootGroup.rotation.x += (v.targetRotX - v.rootGroup.rotation.x) * 0.05;
+                    v.rootGroup.position.y = Math.sin(t * 1.1 + idx) * 0.05;
+                    v.renderer.render(v.scene, v.camera);
+                });
+            }
+
             animate();
-        };
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            switchFrame3Study(2);
+            renderYoutubeSection();
+            initAllSculptures();
+        });
     </script>
 </body>
 </html>
