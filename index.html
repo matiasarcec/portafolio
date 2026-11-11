@@ -441,23 +441,9 @@
         </div>
 
         <div class="relative z-10 my-3 sm:my-5 flex items-center justify-center">
-            <h2 class="display-giant text-ink flex items-center justify-center gap-[0.16em] tracking-tighter select-none">
-                <span class="relative inline-flex items-center justify-center w-[0.76em] h-[0.76em] shrink-0">
-                    <img src="https://drive.google.com/thumbnail?id=1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo&sz=w1000"
-                         data-fallback-1="https://lh3.googleusercontent.com/d/1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo=w1000"
-                         data-fallback-2="https://drive.google.com/thumbnail?id=1zo8lwRpO0-OXgtIocN38vYOsVz14x3cI&sz=w1000"
-                         data-fallback-step="0"
-                         onerror="window.handleLogoFallback(this)"
-                         alt="*"
-                         class="w-full h-full object-contain block" />
-                    <svg class="surcos-svg-fallback hidden w-full h-full" viewBox="0 0 100 100" aria-label="*">
-                        <g fill="#575756">
-                            <rect x="6" y="42" width="88" height="16" />
-                            <rect x="6" y="42" width="88" height="16" transform="rotate(60 50 50)" />
-                            <rect x="6" y="42" width="88" height="16" transform="rotate(120 50 50)" />
-                        </g>
-                        <polygon fill="#141414" points="36.1436,58 94,58 94,42 63.8564,42 78.9282,15.8949 65.0718,7.8949" />
-                    </svg>
+            <h2 class="display-giant text-ink flex items-center justify-center gap-[0.14em] tracking-tighter select-none">
+                <span class="relative inline-flex items-center justify-center w-[0.68em] h-[0.68em] shrink-0 cursor-pointer" title="Haz clic para reiniciar construcción geométrica">
+                    <canvas id="surcos-asterisk-canvas" class="w-full h-full block"></canvas>
                 </span>
                 <span class="lowercase font-bold tracking-[-0.055em]">surcos</span>
             </h2>
@@ -1369,8 +1355,86 @@
             }
         });
 
-        function initHeroAsteriskKinetic() {
-            const canvas = document.getElementById('hero-asterisk-canvas');
+        const DRIVE_PORTFOLIO_FOLDER_ID = "1Gkt4A1DbL7uMm_d97C4M0Qzge_aSQhzg";
+
+        async function syncSecondaryPhotosFromDriveFolder() {
+            const folderEmbedUrl = `https://drive.google.com/embeddedfolderview?id=${DRIVE_PORTFOLIO_FOLDER_ID}#list`;
+            const candidateUrls = [
+                folderEmbedUrl,
+                `https://api.allorigins.win/raw?url=${encodeURIComponent(folderEmbedUrl)}`,
+                `https://corsproxy.io/?${encodeURIComponent(folderEmbedUrl)}`
+            ];
+
+            for (const url of candidateUrls) {
+                try {
+                    const res = await fetch(url);
+                    if (!res.ok) continue;
+                    const html = await res.text();
+                    if (!html || !html.includes('flip-entry')) continue;
+
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const entries = doc.querySelectorAll('.flip-entry');
+                    if (!entries.length) continue;
+
+                    const folderFiles = [];
+                    entries.forEach(entry => {
+                        const rawId = entry.getAttribute('id') || '';
+                        const fileId = rawId.replace(/^entry-/, '').trim();
+                        const titleEl = entry.querySelector('.flip-entry-title');
+                        const title = (titleEl ? titleEl.textContent : '').trim();
+                        if (fileId && title) {
+                            folderFiles.push({ id: fileId, name: title.toLowerCase(), rawName: title });
+                        }
+                    });
+
+                    if (!folderFiles.length) continue;
+
+                    const projectKeywords = [
+                        { projIdx: 0, keys: ['ecomapu'] },
+                        { projIdx: 1, keys: ['sensomap', 'senso'] },
+                        { projIdx: 2, keys: ['urdimbre'] },
+                        { projIdx: 3, keys: ['resonancia'] },
+                        { projIdx: 4, keys: ['trayectoria', 'eolica', 'eólica'] },
+                        { projIdx: 5, keys: ['percepcion', 'percepción', 'sonora'] }
+                    ];
+
+                    let updatedAny = false;
+
+                    projectKeywords.forEach(({ projIdx, keys }) => {
+                        const matching = folderFiles.filter(f => keys.some(k => f.name.includes(k)));
+                        if (!matching.length) return;
+
+                        const photo02 = matching.find(f => /(?:^|[^0-9])0?2(?:[^0-9]|$)/.test(f.name));
+                        const photo01 = matching.find(f => f !== photo02 && /(?:^|[^0-9])0?1(?:[^0-9]|$)/.test(f.name))
+                                     || matching.find(f => f !== photo02);
+
+                        const p = portfolioProjects[projIdx];
+                        if (photo01) {
+                            p.driveFileId = photo01.id;
+                            p.gallery[0].id = photo01.id;
+                            p.gallery[0].detailZoom = false;
+                            updatedAny = true;
+                        }
+                        if (photo02) {
+                            p.gallery[1].id = photo02.id;
+                            p.gallery[1].detailZoom = false;
+                            updatedAny = true;
+                        }
+                    });
+
+                    if (updatedAny) {
+                        renderFrame3ActivePhoto();
+                    }
+                    break;
+                } catch (_) {
+                    // Fallback silencioso a los IDs integrados
+                }
+            }
+        }
+
+        function attachAsteriskKineticToCanvas(canvasId) {
+            const canvas = document.getElementById(canvasId);
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
 
@@ -1589,6 +1653,11 @@
             }
 
             requestAnimationFrame(renderLoop);
+        }
+
+        function initHeroAsteriskKinetic() {
+            attachAsteriskKineticToCanvas('hero-asterisk-canvas');
+            attachAsteriskKineticToCanvas('surcos-asterisk-canvas');
         }
 
         let sculptureViewers = [];
@@ -2011,6 +2080,7 @@
             renderYoutubeSection();
             initHeroAsteriskKinetic();
             initAllSculptures();
+            syncSecondaryPhotosFromDriveFolder();
         });
     </script>
 </body>
