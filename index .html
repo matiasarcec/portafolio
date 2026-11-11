@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P*rtafolio 2026 — Matías Arce Córdova · Diseño de Interacción</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Helvetica Neue', 'sans-serif'],
+                    },
+                    colors: {
+                        paper: '#FFFFFF',
+                        offpaper: '#F6F6F4',
+                        ink: '#0D0D0D',
+                        muted: '#686868',
+                        cardgray: '#EAEAEA'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background-color: #FFFFFF;
+            color: #0D0D0D;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: #0D0D0D;
+            color: #FFFFFF;
+        }
+
+        .display-giant {
+            font-size: clamp(3.3rem, 15.2vw, 17.2rem);
+            line-height: 0.83;
+            letter-spacing: -0.055em;
+            font-weight: 700;
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .display-medium {
+            font-size: clamp(2.4rem, 5.8vw, 5.8rem);
+            line-height: 0.92;
+            letter-spacing: -0.045em;
+            font-weight: 700;
+        }
+
+        .micro-text {
+            font-size: 11.5px;
+            line-height: 1.46;
+            letter-spacing: -0.01em;
+        }
+
+        .micro-nav {
+            font-size: 11px;
+            line-height: 1.25;
+            letter-spacing: -0.01em;
+            font-weight: 500;
+        }
+
+        .frame-study-mode {
+            background-color: #363636;
+            padding: 3.5rem 1.25rem 6rem 1.25rem;
+        }
+
+        .frame-study-mode .editorial-sheet {
+            max-width: 1260px;
+            margin: 0 auto 4.25rem auto;
+            box-shadow: 0 28px 65px rgba(0, 0, 0, 0.42);
+            border: none;
+        }
+
+        .editorial-photo {
+            transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s ease;
+        }
+
+        .group:hover .editorial-photo {
+            transform: scale(1.025);
+        }
+
+        .photo-uniform-frame {
+            aspect-ratio: 4 / 3;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            background-color: #EAEAEA;
+        }
+
+        .photo-detail-zoom {
+            transform: scale(1.22);
+            transform-origin: center center;
+        }
+
+        .group:hover .photo-detail-zoom {
+            transform: scale(1.26);
+        }
+
+        body.bw-editorial-mode .drive-photo-render {
+            filter: grayscale(100%) contrast(1.08);
+        }
+
+        body.bw-editorial-mode .drive-photo-render:hover {
+            filter: grayscale(0%) contrast(1);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFFFFF;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0D0D0D;
+        }
+    </style>
+</head>
+<body id="app-body" class="transition-colors duration-500">
+
+    <!-- Navigation Bar -->
+    <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 bg-ink/95 backdrop-blur-md text-white px-3 py-2 rounded-full shadow-2xl border border-white/15 text-[11px] max-w-[96vw]">
+        <button onclick="scrollToFrame('frame-1')" class="px-2.5 py-1 rounded-full bg-white text-ink font-semibold transition">01 · Portada</button>
+        <button onclick="scrollToFrame('frame-2')" class="px-2.5 py-1 rounded-full hover:bg-white/15 transition">02 · Índice</button>
+        <button onclick="scrollToFrame('frame-3')" class="px-2.5 py-1 rounded-full hover:bg-white/15 transition">03 · Ficha Proyecto</button>
+        <button onclick="scrollToFrame('frame-4')" class="px-2.5 py-1 rounded-full hover:bg-white/15 transition">04 · Surcos</button>
+        <button onclick="scrollToFrame('frame-5')" class="px-2.5 py-1 rounded-full hover:bg-white/15 transition">05 · Contacto</button>
+        <div class="h-3.5 w-[1px] bg-white/20 mx-0.5"></div>
+        <button onclick="cycleSculptureMaterial()" class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-200 border border-amber-400/30 hover:bg-amber-500/30 transition font-semibold flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span id="floating-3d-label">3D: Arcilla Real</span>
+        </button>
+        <button onclick="toggleColorEditorialMode()" id="color-toggle-btn" class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 transition">
+            Color Original
+        </button>
+        <button onclick="togglePresentationMode()" id="mode-toggle-btn" class="px-2.5 py-1 rounded-full bg-white/15 hover:bg-white/25 transition hidden md:inline-block font-medium">
+            Vista 5 Láminas
+        </button>
+    </div>
+
+    <!-- Section 01: Hero -->
+    <section id="frame-1" class="editorial-sheet relative w-full min-h-[93vh] bg-paper overflow-hidden flex flex-col justify-between pt-5 pb-8 px-5 sm:px-8 border-b border-neutral-200">
+        
+        <header class="w-full grid grid-cols-3 items-center z-30 micro-nav">
+            <nav class="flex flex-wrap items-center gap-3 sm:gap-6 text-ink/85">
+                <a href="#frame-2" class="hover:text-ink hover:underline underline-offset-4 transition">proyectos (06)</a>
+                <button onclick="jumpToStudy(0)" class="hover:text-ink hover:underline underline-offset-4 transition hidden sm:inline">servicios</button>
+                <button onclick="jumpToStudy(1)" class="hover:text-ink hover:underline underline-offset-4 transition">interacción</button>
+                <a href="#frame-4" class="hover:text-ink hover:underline underline-offset-4 transition hidden md:inline font-semibold text-ink">surcos audiovisual</a>
+            </nav>
+
+            <div class="flex items-center justify-center gap-1.5 font-bold tracking-tight text-xs sm:text-sm uppercase">
+                <a href="#frame-1" class="inline-flex items-center gap-1.5">
+                    <img src="https://drive.google.com/thumbnail?id=1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo&sz=w400"
+                         data-fallback-1="https://lh3.googleusercontent.com/d/1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo=w400"
+                         data-fallback-2="https://drive.google.com/thumbnail?id=1zo8lwRpO0-OXgtIocN38vYOsVz14x3cI&sz=w400"
+                         data-fallback-step="0"
+                         onerror="window.handleDriveImgError(this)"
+                         alt="*"
+                         class="w-3.5 h-3.5 object-contain inline-block" />
+                    <span>MATÍAS ARCE CÓRDOVA · e[ad] PUCV</span>
+                </a>
+            </div>
+
+            <div class="flex items-center justify-end gap-4 sm:gap-6 text-ink/85">
+                <a href="https://wiki.ead.pucv.cl/Matias_Cordova_Arce" target="_blank" rel="noopener noreferrer" class="hover:text-ink hover:underline underline-offset-4 transition">wiki casiopea ↗</a>
+                <a href="#frame-4" class="hover:text-ink hover:underline underline-offset-4 transition hidden sm:inline">surcos (04 videos)</a>
+                <a href="#frame-5" class="font-semibold text-ink hover:opacity-70 transition">contacto</a>
+            </div>
+        </header>
+
+        <div class="relative mt-10 sm:mt-16 md:mt-20 z-20">
+            <h1 id="hero-giant-heading" class="display-giant text-ink text-center sm:text-left mx-auto flex items-center justify-center sm:justify-start tracking-tighter">
+                <span>P</span>
+                <span class="relative inline-flex items-center justify-center w-[0.74em] h-[0.74em] mx-[-0.015em] translate-y-[0.025em] select-none">
+                    <img src="https://drive.google.com/thumbnail?id=1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo&sz=w1000"
+                         data-fallback-1="https://lh3.googleusercontent.com/d/1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo=w1000"
+                         data-fallback-2="https://drive.google.com/thumbnail?id=1zo8lwRpO0-OXgtIocN38vYOsVz14x3cI&sz=w1000"
+                         data-fallback-step="0"
+                         onerror="window.handleLogoFallback(this)"
+                         alt="*"
+                         class="w-full h-full object-contain block" />
+                    <svg class="surcos-svg-fallback hidden w-full h-full" viewBox="0 0 100 100" aria-label="*">
+                        <defs>
+                            <clipPath id="topLeftHalf">
+                                <polygon points="0,0 100,0 32,100 0,100" />
+                            </clipPath>
+                            <clipPath id="bottomRightHalf">
+                                <polygon points="68,0 100,0 100,100 32,100" />
+                            </clipPath>
+                        </defs>
+                        <g clip-path="url(#topLeftHalf)" fill="#575756">
+                            <rect x="6" y="42" width="88" height="16" />
+                            <rect x="6" y="42" width="88" height="16" transform="rotate(60 50 50)" />
+                            <rect x="6" y="42" width="88" height="16" transform="rotate(120 50 50)" />
+                        </g>
+                        <g clip-path="url(#bottomRightHalf)" fill="#141414">
+                            <rect x="6" y="42" width="88" height="16" />
+                            <rect x="6" y="42" width="88" height="16" transform="rotate(60 50 50)" />
+                            <rect x="6" y="42" width="88" height="16" transform="rotate(120 50 50)" />
+                        </g>
+                    </svg>
+                </span>
+                <span>rtafolio</span>
+            </h1>
+        </div>
+
+        <div class="relative z-20 grid grid-cols-12 gap-8 items-end my-auto pt-8 sm:pt-12">
+            <div class="col-span-12 md:col-span-6 flex flex-col justify-between space-y-5">
+                <div class="max-w-[440px] micro-text text-ink/90 font-medium">
+                    <p>
+                        Portafolio 2026 de <strong>Matías Arce Córdova</strong> — Diseño de Interacción, Diseño de Servicios, Diseño de Información y Fabricación Digital en la Escuela de Arquitectura y Diseño e[ad] PUCV, Valparaíso.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-4 pt-1">
+                    <a href="#frame-2" 
+                       class="bg-ink text-white hover:bg-neutral-800 transition-all duration-300 px-7 py-2.5 text-[11px] font-medium tracking-tight shadow-xl inline-flex items-center gap-2 whitespace-nowrap">
+                        <span>explorar índice de proyectos</span>
+                        <span class="text-xs">→</span>
+                    </a>
+                    <a href="#frame-3" class="micro-text font-semibold text-ink hover:underline">
+                        ver fichas completas (06) →
+                    </a>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10.5px] text-muted font-mono pt-1">
+                    <span>matias.arce.c@mail.pucv.cl</span>
+                    <span>·</span>
+                    <span>+56 9 4709 3083</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full flex items-end justify-between z-30 micro-nav text-muted pt-4">
+            <span>DISEÑO DE INTERACCIÓN · 2026</span>
+            <span class="hidden sm:inline">VALPARAÍSO, CHILE</span>
+            <span>01 · PORTADA</span>
+        </div>
+    </section>
+
+    <!-- Section 02: Project Index -->
+    <section id="frame-2" class="editorial-sheet relative w-full min-h-[88vh] bg-paper overflow-hidden px-5 sm:px-8 py-7 flex flex-col justify-between border-b border-neutral-200">
+        
+        <div class="grid grid-cols-12 gap-4 items-start">
+            <div class="col-span-6 sm:col-span-4">
+                <a href="#frame-1" class="font-bold tracking-tight text-sm sm:text-base uppercase inline-flex items-center gap-1.5">
+                    <span>MATÍAS ARCE CÓRDOVA</span>
+                </a>
+                <span class="block text-[10px] font-mono text-muted mt-0.5">DISEÑO DE INTERACCIÓN · e[ad] PUCV</span>
+            </div>
+
+            <div class="col-span-6 sm:col-span-4 flex flex-col items-center text-center micro-nav space-y-1 text-ink/85">
+                <button onclick="jumpToStudy(0)" class="hover:underline hover:text-ink transition">ecomapu travel</button>
+                <button onclick="jumpToStudy(1)" class="hover:underline hover:text-ink transition">sensomap</button>
+                <button onclick="jumpToStudy(2)" class="hover:underline hover:text-ink transition font-semibold text-ink">urdimbre contención</button>
+                <button onclick="jumpToStudy(3)" class="hover:underline hover:text-ink transition">resonancias del territorio</button>
+                <button onclick="jumpToStudy(4)" class="hover:underline hover:text-ink transition">trayectoria eólica inversa</button>
+                <button onclick="jumpToStudy(5)" class="hover:underline hover:text-ink transition">percepción sonora</button>
+            </div>
+
+            <div class="col-span-12 sm:col-span-4 flex flex-col items-end text-right micro-text text-muted hidden sm:flex">
+                <span class="font-bold text-ink uppercase text-[11px]">Portafolio 2026</span>
+                <span class="text-[10.5px]">Valparaíso, Chile</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-12 gap-8 items-start my-auto py-8">
+            <div class="col-span-12 lg:col-span-4 flex flex-col items-start">
+                <div class="text-base sm:text-xl font-bold tracking-tight text-ink">
+                    { índice de proyectos }
+                </div>
+                <p class="micro-text text-muted max-w-[320px] mt-2">
+                    Selecciona cualquier proyecto del índice para visualizar su ficha técnica completa y registro fotográfico en la siguiente lámina.
+                </p>
+            </div>
+
+            <div class="col-span-12 lg:col-span-8 w-full border-t border-neutral-300 divide-y divide-neutral-200 micro-text">
+                <div class="py-3.5 flex items-center justify-between gap-4 group">
+                    <button onclick="jumpToStudy(0)" class="text-left flex items-baseline gap-4 group-hover:pl-1.5 transition-all">
+                        <span class="font-mono text-xs text-muted">01</span>
+                        <div>
+                            <span class="font-bold text-sm sm:text-base text-ink">Ecomapu Travel</span>
+                            <span class="text-muted block text-[11px]">Taller de Diseño de Servicios — Rediseño de experiencia de turismo sustentable en Barrio Puerto</span>
+                        </div>
+                    </button>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <span class="font-mono text-[11px] text-muted">2026</span>
+                        <button onclick="jumpToStudy(0)" class="text-[10.5px] font-semibold px-2.5 py-1 bg-ink text-white hover:bg-neutral-800 transition">Ver ficha →</button>
+                        <a href="https://wiki.ead.pucv.cl/Ecomapu_/_Free_tour_Valpara%C3%ADso_-_Antonela_Barr%C3%ADa,_Florencia_Pimentel,_Matias_Arce" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono px-2 py-1 bg-offpaper border border-neutral-300 hover:bg-ink hover:text-white transition">Wiki ↗</a>
+                    </div>
+                </div>
+
+                <div class="py-3.5 flex items-center justify-between gap-4 group">
+                    <button onclick="jumpToStudy(1)" class="text-left flex items-baseline gap-4 group-hover:pl-1.5 transition-all">
+                        <span class="font-mono text-xs text-muted">02</span>
+                        <div>
+                            <span class="font-bold text-sm sm:text-base text-ink">SensoMap</span>
+                            <span class="text-muted block text-[11px]">Taller de Diseño de Interacción — Mapa sensorial urbano para cuidadores de infantes con DIS/TEA</span>
+                        </div>
+                    </button>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <span class="font-mono text-[11px] text-muted">2025</span>
+                        <button onclick="jumpToStudy(1)" class="text-[10.5px] font-semibold px-2.5 py-1 bg-ink text-white hover:bg-neutral-800 transition">Ver ficha →</button>
+                        <a href="https://wiki.ead.pucv.cl/Grupo_1:_Sensomap" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono px-2 py-1 bg-offpaper border border-neutral-300 hover:bg-ink hover:text-white transition">Wiki ↗</a>
+                    </div>
+                </div>
+
+                <div class="py-3.5 flex items-center justify-between gap-4 group">
+                    <button onclick="jumpToStudy(2)" class="text-left flex items-baseline gap-4 group-hover:pl-1.5 transition-all">
+                        <span class="font-mono text-xs text-muted">03</span>
+                        <div>
+                            <span class="font-bold text-sm sm:text-base text-ink">Urdimbre Contención</span>
+                            <span class="text-muted block text-[11px]">Taller de Personas y Territorios — Sistema modular de contención para impresión 3D en arcilla</span>
+                        </div>
+                    </button>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <span class="font-mono text-[11px] text-muted">2026</span>
+                        <button onclick="jumpToStudy(2)" class="text-[10.5px] font-semibold px-2.5 py-1 bg-ink text-white hover:bg-neutral-800 transition">Ver ficha →</button>
+                        <a href="https://wiki.ead.pucv.cl/Matias_Arce,_Alonso_Hernandez,_Florencia_Pimentel._TPyT_S1_2026._Flujo_y_Asiento" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono px-2 py-1 bg-offpaper border border-neutral-300 hover:bg-ink hover:text-white transition">Wiki ↗</a>
+                    </div>
+                </div>
+
+                <div class="py-3.5 flex items-center justify-between gap-4 group">
+                    <button onclick="jumpToStudy(3)" class="text-left flex items-baseline gap-4 group-hover:pl-1.5 transition-all">
+                        <span class="font-mono text-xs text-muted">04</span>
+                        <div>
+                            <span class="font-bold text-sm sm:text-base text-ink">Resonancias del Territorio</span>
+                            <span class="text-muted block text-[11px]">Taller de Personas y Territorios — Aerófono cerámico Diaguita-Inca, resonancia de Helmholtz y matricería</span>
+                        </div>
+                    </button>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <span class="font-mono text-[11px] text-muted">2026</span>
+                        <button onclick="jumpToStudy(3)" class="text-[10.5px] font-semibold px-2.5 py-1 bg-ink text-white hover:bg-neutral-800 transition">Ver ficha →</button>
+                        <a href="https://wiki.ead.pucv.cl/Taller_de_personas_y_territorios_2026" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono px-2 py-1 bg-offpaper border border-neutral-300 hover:bg-ink hover:text-white transition">Wiki ↗</a>
+                    </div>
+                </div>
+
+                <div class="py-3.5 flex items-center justify-between gap-4 group">
+                    <button onclick="jumpToStudy(4)" class="text-left flex items-baseline gap-4 group-hover:pl-1.5 transition-all">
+                        <span class="font-mono text-xs text-muted">05</span>
+                        <div>
+                            <span class="font-bold text-sm sm:text-base text-ink">Trayectoria Eólica Inversa</span>
+                            <span class="text-muted block text-[11px]">Taller de Personas y Territorios — Computación generativa e impresión cerámica 3D LDM</span>
+                        </div>
+                    </button>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <span class="font-mono text-[11px] text-muted">2026</span>
+                        <button onclick="jumpToStudy(4)" class="text-[10.5px] font-semibold px-2.5 py-1 bg-ink text-white hover:bg-neutral-800 transition">Ver ficha →</button>
+                        <a href="https://wiki.ead.pucv.cl/TPyT_S1_2026._Trayectoria_E%C3%B3lica_Inversa" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono px-2 py-1 bg-offpaper border border-neutral-300 hover:bg-ink hover:text-white transition">Wiki ↗</a>
+                    </div>
+                </div>
+
+                <div class="py-3.5 flex items-center justify-between gap-4 group">
+                    <button onclick="jumpToStudy(5)" class="text-left flex items-baseline gap-4 group-hover:pl-1.5 transition-all">
+                        <span class="font-mono text-xs text-muted">06</span>
+                        <div>
+                            <span class="font-bold text-sm sm:text-base text-ink">Percepción Sonora</span>
+                            <span class="text-muted block text-[11px]">Taller de Diseño de Servicios — Instrumento físico de medición acústica y plataforma web interactiva</span>
+                        </div>
+                    </button>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <span class="font-mono text-[11px] text-muted">2026</span>
+                        <button onclick="jumpToStudy(5)" class="text-[10.5px] font-semibold px-2.5 py-1 bg-ink text-white hover:bg-neutral-800 transition">Ver ficha →</button>
+                        <a href="https://wiki.ead.pucv.cl/Proyecto_de_Visualizaci%C3%B3n_-_Grupo_2" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono px-2 py-1 bg-offpaper border border-neutral-300 hover:bg-ink hover:text-white transition">Wiki ↗</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full flex items-center justify-between micro-nav text-muted pt-4">
+            <span>ÍNDICE GENERAL</span>
+            <span>02 · ÍNDICE</span>
+        </div>
+    </section>
+
+    <!-- Section 03: Project Details -->
+    <section id="frame-3" class="editorial-sheet relative w-full min-h-[95vh] bg-paper overflow-hidden pt-5 px-5 sm:px-8 flex flex-col justify-between border-b border-neutral-200">
+        
+        <div class="w-full grid grid-cols-12 items-center z-30 micro-nav gap-2">
+            <div class="col-span-12 sm:col-span-3 font-bold uppercase text-xs sm:text-sm flex items-center gap-1">
+                <span>P</span>
+                <img src="https://drive.google.com/thumbnail?id=1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo&sz=w300"
+                     data-fallback-1="https://lh3.googleusercontent.com/d/1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo=w300"
+                     data-fallback-2="https://drive.google.com/thumbnail?id=1zo8lwRpO0-OXgtIocN38vYOsVz14x3cI&sz=w300"
+                     data-fallback-step="0"
+                     onerror="window.handleDriveImgError(this)"
+                     alt="*"
+                     class="w-3.5 h-3.5 object-contain inline-block -mx-0.5" />
+                <span>RTAFOLIO</span>
+                <span class="text-muted font-normal text-[10px] ml-1.5" id="f3-page-indicator">URDIMBRE CONTENCIÓN</span>
+            </div>
+            <div class="col-span-12 sm:col-span-6 flex flex-wrap items-center justify-start sm:justify-center gap-3 sm:gap-5 text-ink/80">
+                <button onclick="switchFrame3Study(0)" id="f3-tab-0" class="hover:text-ink transition">01 ecomapu</button>
+                <button onclick="switchFrame3Study(1)" id="f3-tab-1" class="hover:text-ink transition">02 sensomap</button>
+                <button onclick="switchFrame3Study(2)" id="f3-tab-2" class="font-bold text-ink underline underline-offset-4">03 urdimbre</button>
+                <button onclick="switchFrame3Study(3)" id="f3-tab-3" class="hover:text-ink transition">04 resonancias</button>
+                <button onclick="switchFrame3Study(4)" id="f3-tab-4" class="hover:text-ink transition">05 trayectoria</button>
+                <button onclick="switchFrame3Study(5)" id="f3-tab-5" class="hover:text-ink transition">06 percepción</button>
+            </div>
+            <div class="hidden sm:flex sm:col-span-3 items-center justify-end gap-3 text-ink/80">
+                <span id="f3-project-year" class="text-[11px] font-mono font-semibold text-ink">2026</span>
+                <span class="text-muted">·</span>
+                <span class="font-semibold" id="f3-counter-badge">03 / 06</span>
+            </div>
+        </div>
+
+        <div class="relative z-10 mt-2 sm:mt-4">
+            <h2 id="f3-giant-title" class="display-giant text-ink text-center">
+                Urdimbre
+            </h2>
+        </div>
+
+        <div class="relative z-20 grid grid-cols-12 gap-6 items-start flex-1 -mt-3 sm:-mt-8 md:-mt-10">
+            
+            <div class="col-span-12 md:col-span-3 flex flex-col justify-end h-full pb-8 micro-text order-3 md:order-1">
+                <div class="border-t border-neutral-300 pt-3 space-y-2.5">
+                    <div>
+                        <span class="text-[10px] uppercase tracking-wider text-muted block">Categoría</span>
+                        <div class="text-ink font-bold" id="f3-meta-category">PROYECTO DE DISEÑO INDUSTRIAL</div>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase tracking-wider text-muted block">Disciplina</span>
+                        <div class="text-ink/90" id="f3-meta-discipline">Fabricación Digital / Diseño Paramétrico / Interacción Material</div>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase tracking-wider text-muted block">Metodologías y Materiales</span>
+                        <div class="text-ink/80" id="f3-meta-methods">Base cuadriculada, paneles de acrílico con repisas modulares, soportes de fijación y varillas de soporte.</div>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase tracking-wider text-muted block">Contexto & Autoría</span>
+                        <div class="text-ink/80" id="f3-meta-context">Taller de Personas y Territorios (TPYT 2026), e[ad] PUCV · Matías Arce Córdova, Alonso Hernández, Florencia Pimentel.</div>
+                    </div>
+                    <div class="pt-2 space-y-1.5" id="f3-wiki-links-box"></div>
+                </div>
+            </div>
+
+            <div class="col-span-12 md:col-span-5 flex flex-col items-center order-1 md:order-2 h-full">
+                <div id="f3-center-frame" class="group cursor-pointer w-full max-w-[500px] photo-uniform-frame shadow-2xl border border-neutral-200"></div>
+                <div id="f3-gallery-thumbs" class="w-full max-w-[500px] grid grid-cols-2 gap-3 mt-3 pb-4"></div>
+            </div>
+
+            <div class="col-span-12 md:col-span-4 flex flex-col justify-between pt-4 md:pt-14 pb-8 order-2 md:order-3 h-full">
+                <div class="max-w-[365px]">
+                    <div class="text-[10px] font-mono uppercase tracking-wider text-muted mb-1.5" id="f3-kicker">
+                        URDIMBRE CONTENCIÓN · 2026
+                    </div>
+                    <p id="f3-description" class="micro-text text-ink font-medium leading-relaxed">
+                        Dispositivo de soporte físico y mediación técnica diseñado para expandir los límites geométricos de la manufactura aditiva con materiales fluidos. El proyecto aborda la restricción crítica de la impresión 3D en arcilla: la dependencia de la autoportancia de la masa húmeda, que suele colapsar por gravedad ante ángulos pronunciados o voladizos.
+                    </p>
+                    <p id="f3-description-2" class="micro-text text-ink/80 leading-relaxed mt-3">
+                        A través de un sistema modular de contención progresiva, el proyecto introduce el andamio efímero como una variable coordinada con la máquina. Esto permite sostener temporalmente el peso del material blando durante su deposición capa sobre capa, habilitando formas cóncavas, pliegues y geometrías oblicuas que el material no podría conservar por sí solo.
+                    </p>
+
+                    <div class="mt-7 flex flex-wrap items-center justify-end gap-4">
+                        <a id="f3-external-url" href="https://wiki.ead.pucv.cl/Matias_Arce,_Alonso_Hernandez,_Florencia_Pimentel._TPyT_S1_2026._Flujo_y_Asiento" target="_blank" rel="noopener noreferrer" class="micro-text underline text-muted hover:text-ink">
+                            documentación wiki e[ad] ↗
+                        </a>
+                        <button onclick="openProjectModal(currentFrame3Project)" class="micro-text font-bold text-ink hover:opacity-60 transition flex items-center gap-1.5">
+                            <span>ampliar ficha y fotos 01-02</span>
+                            <span>→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-10 md:mt-16 border-t border-neutral-200 pt-3 micro-text flex items-center justify-between">
+                    <button onclick="stepFrame3Project(-1)" class="font-semibold hover:underline">← Anterior</button>
+                    <span class="text-muted text-[10.5px]">03 · FICHA PROYECTO</span>
+                    <button onclick="stepFrame3Project(1)" class="font-semibold hover:underline">Siguiente →</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Section 04: Surcos Audiovisual -->
+    <section id="frame-4" class="editorial-sheet relative w-full min-h-[95vh] bg-paper overflow-hidden pt-5 pb-8 px-5 sm:px-8 flex flex-col justify-between border-b border-neutral-200">
+        
+        <div class="w-full grid grid-cols-12 items-center z-30 micro-nav gap-2">
+            <div class="col-span-12 sm:col-span-4 font-bold text-xs sm:text-sm flex items-center gap-2">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 100 100" aria-label="*">
+                    <defs>
+                        <clipPath id="surcosMiniTopLeft">
+                            <polygon points="0,0 100,0 32,100 0,100" />
+                        </clipPath>
+                        <clipPath id="surcosMiniBottomRight">
+                            <polygon points="68,0 100,0 100,100 32,100" />
+                        </clipPath>
+                    </defs>
+                    <g clip-path="url(#surcosMiniTopLeft)" fill="#575756">
+                        <rect x="6" y="42" width="88" height="16" />
+                        <rect x="6" y="42" width="88" height="16" transform="rotate(60 50 50)" />
+                        <rect x="6" y="42" width="88" height="16" transform="rotate(120 50 50)" />
+                    </g>
+                    <g clip-path="url(#surcosMiniBottomRight)" fill="#141414">
+                        <rect x="6" y="42" width="88" height="16" />
+                        <rect x="6" y="42" width="88" height="16" transform="rotate(60 50 50)" />
+                        <rect x="6" y="42" width="88" height="16" transform="rotate(120 50 50)" />
+                    </g>
+                </svg>
+                <span class="lowercase tracking-tight font-extrabold text-sm">surcos</span>
+                <span class="text-muted font-normal uppercase text-[10px]">· audiovisual & fotografía</span>
+            </div>
+            <div id="video-nav-tabs" class="col-span-12 sm:col-span-5 flex flex-wrap items-center justify-start sm:justify-center gap-3 sm:gap-4 text-ink/80"></div>
+            <div class="col-span-12 sm:col-span-3 flex items-center justify-end gap-3">
+                <span class="font-mono text-[10.5px] text-muted">MARCA PERSONAL AUTODIDACTA</span>
+            </div>
+        </div>
+
+        <div class="relative z-10 my-3 sm:my-5 flex items-center justify-center">
+            <h2 class="display-giant text-ink flex items-center justify-center gap-[0.16em] tracking-tighter select-none">
+                <span class="relative inline-flex items-center justify-center w-[0.76em] h-[0.76em] shrink-0">
+                    <img src="https://drive.google.com/thumbnail?id=1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo&sz=w1000"
+                         data-fallback-1="https://lh3.googleusercontent.com/d/1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo=w1000"
+                         data-fallback-2="https://drive.google.com/thumbnail?id=1zo8lwRpO0-OXgtIocN38vYOsVz14x3cI&sz=w1000"
+                         data-fallback-step="0"
+                         onerror="window.handleLogoFallback(this)"
+                         alt="*"
+                         class="w-full h-full object-contain block" />
+                    <svg class="surcos-svg-fallback hidden w-full h-full" viewBox="0 0 100 100" aria-label="*">
+                        <defs>
+                            <clipPath id="surcosHeroLeft">
+                                <polygon points="0,0 100,0 32,100 0,100" />
+                            </clipPath>
+                            <clipPath id="surcosHeroRight">
+                                <polygon points="68,0 100,0 100,100 32,100" />
+                            </clipPath>
+                        </defs>
+                        <g clip-path="url(#surcosHeroLeft)" fill="#575756">
+                            <rect x="6" y="42" width="88" height="16" />
+                            <rect x="6" y="42" width="88" height="16" transform="rotate(60 50 50)" />
+                            <rect x="6" y="42" width="88" height="16" transform="rotate(120 50 50)" />
+                        </g>
+                        <g clip-path="url(#surcosHeroRight)" fill="#141414">
+                            <rect x="6" y="42" width="88" height="16" />
+                            <rect x="6" y="42" width="88" height="16" transform="rotate(60 50 50)" />
+                            <rect x="6" y="42" width="88" height="16" transform="rotate(120 50 50)" />
+                        </g>
+                    </svg>
+                </span>
+                <span class="lowercase font-bold tracking-[-0.055em]">surcos</span>
+            </h2>
+        </div>
+
+        <div class="relative z-20 grid grid-cols-12 gap-6 items-start flex-1">
+            
+            <div class="col-span-12 lg:col-span-3 flex flex-col justify-end h-full pb-4 micro-text order-3 lg:order-1">
+                <div class="border-t border-neutral-300 pt-3 space-y-3">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 shrink-0" viewBox="0 0 100 100" aria-label="*">
+                            <g clip-path="url(#surcosMiniTopLeft)" fill="#575756">
+                                <rect x="6" y="42" width="88" height="16" />
+                                <rect x="6" y="42" width="88" height="16" transform="rotate(60 50 50)" />
+                                <rect x="6" y="42" width="88" height="16" transform="rotate(120 50 50)" />
+                            </g>
+                            <g clip-path="url(#surcosMiniBottomRight)" fill="#141414">
+                                <rect x="6" y="42" width="88" height="16" />
+                                <rect x="6" y="42" width="88" height="16" transform="rotate(60 50 50)" />
+                                <rect x="6" y="42" width="88" height="16" transform="rotate(120 50 50)" />
+                            </g>
+                        </svg>
+                        <span class="font-extrabold text-base tracking-tight lowercase text-ink">surcos</span>
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-muted ml-1">· Marca Personal</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase tracking-wider text-muted block">Fotografía y Video Autodidacta</span>
+                        <p class="text-ink/90 leading-relaxed mt-0.5">
+                            <strong>surcos</strong> es la marca personal de <strong>Matías Arce Córdova</strong> dedicada de forma autodidacta a la creación audiovisual, fotografía y realización de video, articulando registro documental, montaje rítmico y experimentación visual.
+                        </p>
+                    </div>
+                    <div class="border-t border-neutral-200 pt-2.5">
+                        <span class="text-[10px] uppercase tracking-wider text-muted block">Pieza Seleccionada</span>
+                        <div class="text-ink font-bold text-sm mt-0.5" id="yt-active-title">Surcos · 01</div>
+                        <div class="text-ink/80 mt-1" id="yt-active-desc">
+                            Registro audiovisual y dirección de fotografía por Matías Arce Córdova.
+                        </div>
+                    </div>
+                    <div class="pt-1 flex flex-col gap-1.5">
+                        <button onclick="switchEmbedHostMode()" class="w-full py-1.5 px-3 bg-offpaper border border-neutral-300 hover:border-ink text-ink transition text-[10.5px] font-semibold flex items-center justify-between">
+                            <span id="yt-embed-mode-label">Servidor Reproductor: Estándar</span>
+                            <span class="font-mono text-[10px]">Cambiar ↻</span>
+                        </button>
+                        <a id="yt-external-watch" href="https://youtu.be/CpAsqw2tDj4" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 px-3 bg-ink text-white hover:bg-neutral-800 transition text-[10.5px] font-semibold flex items-center justify-between">
+                            <span>Abrir directo en YouTube ↗</span>
+                            <span id="yt-active-code-badge" class="font-mono text-[10px]">01 / 04</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-5 flex flex-col items-center order-1 lg:order-2">
+                <div id="youtube-stage-wrapper" class="w-full aspect-video bg-ink border border-neutral-300 shadow-2xl overflow-hidden relative group"></div>
+                <div class="w-full flex items-center justify-between mt-2.5 micro-text">
+                    <span id="yt-caption-left" class="font-bold text-ink">Surcos · 01</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="activateInPageVideoPlayer()" class="underline text-[10.5px] font-semibold text-ink hover:opacity-70">Reproducir en página</button>
+                        <span class="text-muted">·</span>
+                        <span class="font-mono text-[10.5px] text-muted">16:9 HD</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-4 flex flex-col justify-between pt-2 lg:pt-2 pb-4 order-2 lg:order-3 h-full">
+                <div>
+                    <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-muted mb-2.5">
+                        <span>SELECCIÓN AUDIOVISUAL · 01-04</span>
+                        <span>4 PIEZAS</span>
+                    </div>
+                    <div id="youtube-cards-list" class="grid grid-cols-2 gap-3"></div>
+                </div>
+
+                <div class="mt-6 border-t border-neutral-200 pt-3 micro-text flex items-center justify-between text-muted">
+                    <span>* surcos · FOTOGRAFÍA & VIDEO</span>
+                    <span class="font-semibold text-ink">04 · AUDIOVISUAL</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Section 05: Closing Sculpture & Contact -->
+    <section id="frame-5" class="editorial-sheet relative w-full min-h-[93vh] bg-paper overflow-hidden px-5 sm:px-8 py-6 flex flex-col justify-between">
+        
+        <div class="w-full flex items-center justify-between z-30 micro-nav">
+            <a href="#frame-1" class="font-bold uppercase text-xs sm:text-sm inline-flex items-center gap-1">
+                <span>P</span>
+                <img src="https://drive.google.com/thumbnail?id=1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo&sz=w300"
+                     data-fallback-1="https://lh3.googleusercontent.com/d/1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo=w300"
+                     data-fallback-2="https://drive.google.com/thumbnail?id=1zo8lwRpO0-OXgtIocN38vYOsVz14x3cI&sz=w300"
+                     data-fallback-step="0"
+                     onerror="window.handleDriveImgError(this)"
+                     alt="*"
+                     class="w-3.5 h-3.5 object-contain inline-block -mx-0.5" />
+                <span>RTAFOLIO · MATÍAS ARCE CÓRDOVA</span>
+            </a>
+
+            <div class="flex flex-wrap items-center gap-4 sm:gap-7 text-ink/85">
+                <a href="https://wiki.ead.pucv.cl/Matias_Cordova_Arce" target="_blank" rel="noopener noreferrer" class="hover:underline font-semibold">Perfil Wiki Casiopea e[ad] ↗</a>
+                <a href="https://matiasarcec.github.io/percepcionsonora/" target="_blank" rel="noopener noreferrer" class="hover:underline hidden sm:inline">Web Percepción Sonora ↗</a>
+                <button onclick="copyEmail()" class="hover:underline">matias.arce.c@mail.pucv.cl</button>
+                <span class="font-semibold">+56 9 4709 3083</span>
+            </div>
+        </div>
+
+        <div class="relative sm:absolute inset-0 flex items-center justify-center sm:justify-end sm:pr-[5%] pointer-events-none z-10 my-4 sm:my-0">
+            <div class="w-[330px] h-[390px] sm:w-[580px] sm:h-[670px] md:w-[680px] md:h-[750px] pointer-events-auto">
+                <canvas id="closing-sculpture-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+            </div>
+        </div>
+
+        <div class="relative z-30 max-w-lg mt-auto pt-10 pb-2">
+            <div class="mb-4 flex items-center gap-3">
+                <img src="https://drive.google.com/thumbnail?id=1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo&sz=w600"
+                     data-fallback-1="https://lh3.googleusercontent.com/d/1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo=w600"
+                     data-fallback-2="https://drive.google.com/thumbnail?id=1zo8lwRpO0-OXgtIocN38vYOsVz14x3cI&sz=w600"
+                     data-fallback-step="0"
+                     onerror="window.handleDriveImgError(this)"
+                     alt="Emblema Surcos P*rtafolio"
+                     class="w-12 h-12 object-contain" />
+            </div>
+
+            <h2 class="display-medium text-ink tracking-tight">
+                Matías Arce Córdova
+            </h2>
+            <p class="micro-text text-ink/90 font-medium mt-3 max-w-[390px]">
+                Portafolio 2026 · Diseño de Interacción, Diseño de Servicios, Diseño de Información y Fabricación Digital en la Escuela de Arquitectura y Diseño e[ad] PUCV, Valparaíso.
+            </p>
+
+            <div class="mt-4 pt-3 border-t border-neutral-200 max-w-[430px]">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-muted block mb-1.5">Repositorio de Proyectos en Wiki Casiopea e[ad] PUCV</span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
+                    <a href="https://wiki.ead.pucv.cl/Ecomapu_/_Free_tour_Valpara%C3%ADso_-_Antonela_Barr%C3%ADa,_Florencia_Pimentel,_Matias_Arce" target="_blank" rel="noopener noreferrer" class="hover:underline text-ink font-medium truncate">01 · Ecomapu Travel ↗</a>
+                    <a href="https://wiki.ead.pucv.cl/Grupo_1:_Sensomap" target="_blank" rel="noopener noreferrer" class="hover:underline text-ink font-medium truncate">02 · SensoMap ↗</a>
+                    <a href="https://wiki.ead.pucv.cl/Matias_Arce,_Alonso_Hernandez,_Florencia_Pimentel._TPyT_S1_2026._Flujo_y_Asiento" target="_blank" rel="noopener noreferrer" class="hover:underline text-ink font-medium truncate">03 · Urdimbre Contención ↗</a>
+                    <a href="https://wiki.ead.pucv.cl/Taller_de_personas_y_territorios_2026" target="_blank" rel="noopener noreferrer" class="hover:underline text-ink font-medium truncate">04 · Resonancias del Territorio ↗</a>
+                    <a href="https://wiki.ead.pucv.cl/TPyT_S1_2026._Trayectoria_E%C3%B3lica_Inversa" target="_blank" rel="noopener noreferrer" class="hover:underline text-ink font-medium truncate">05 · Trayectoria Eólica Inversa ↗</a>
+                    <a href="https://wiki.ead.pucv.cl/Proyecto_de_Visualizaci%C3%B3n_-_Grupo_2" target="_blank" rel="noopener noreferrer" class="hover:underline text-ink font-medium truncate">06 · Percepción Sonora ↗</a>
+                </div>
+            </div>
+
+            <div class="mt-4 space-y-1 micro-text font-mono text-ink">
+                <div>Correo: <button onclick="copyEmail()" class="underline font-semibold hover:opacity-70">matias.arce.c@mail.pucv.cl</button></div>
+                <div>Teléfono / WhatsApp: <a href="https://wa.me/56947093083" target="_blank" rel="noopener noreferrer" class="underline font-semibold hover:opacity-70">+56 9 4709 3083</a></div>
+            </div>
+
+            <div class="mt-5 flex flex-wrap items-center gap-5">
+                <button onclick="copyEmail()" class="text-sm sm:text-base font-bold tracking-tight text-ink hover:opacity-60 transition flex items-center gap-1.5">
+                    <span>contactar a matías arce córdova</span>
+                    <span>→</span>
+                </button>
+                <a href="https://wiki.ead.pucv.cl/Matias_Cordova_Arce" target="_blank" rel="noopener noreferrer" class="micro-text underline text-muted hover:text-ink">
+                    Ver perfil en Casiopea ↗
+                </a>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Project Lightbox Modal -->
+    <div id="project-modal" class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-xs flex items-center justify-end transition-opacity">
+        <div class="bg-paper w-full max-w-3xl h-full overflow-y-auto p-6 sm:p-10 flex flex-col justify-between shadow-2xl border-l border-neutral-200">
+            <div>
+                <div class="flex items-center justify-between border-b border-neutral-200 pb-4">
+                    <div>
+                        <span id="modal-index" class="micro-nav text-muted uppercase font-mono">03 · 01-02</span>
+                        <div id="modal-category-badge" class="text-[10px] font-bold uppercase tracking-wider text-ink mt-0.5">PROYECTO DE DISEÑO INDUSTRIAL</div>
+                    </div>
+                    <button onclick="closeProjectModal()" class="text-xs font-bold uppercase px-3 py-1.5 bg-ink text-white hover:bg-neutral-800 transition">
+                        Cerrar [ESC]
+                    </button>
+                </div>
+
+                <h3 id="modal-title" class="text-2xl sm:text-4xl font-bold tracking-tight mt-5">
+                    Urdimbre Contención
+                </h3>
+                <p id="modal-subtitle" class="text-xs text-muted mt-1 font-medium"></p>
+
+                <div id="modal-media-container" class="mt-5 bg-offpaper border border-neutral-300 overflow-hidden"></div>
+                <div id="modal-thumbs-bar" class="mt-3 grid grid-cols-2 gap-3"></div>
+                <div id="modal-wiki-bar" class="mt-4 flex flex-wrap items-center gap-2.5 bg-offpaper p-3 border border-neutral-200"></div>
+
+                <div class="mt-6 space-y-3.5 text-xs leading-relaxed text-ink/90">
+                    <p id="modal-body-1"></p>
+                    <p id="modal-body-2"></p>
+                </div>
+
+                <div class="mt-6 bg-offpaper border border-neutral-200 p-4 space-y-2.5 text-xs">
+                    <div class="font-bold uppercase tracking-wider text-[10.5px] text-ink border-b border-neutral-300 pb-1.5">
+                        Ficha Técnica del Proyecto
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-1">
+                        <span class="text-muted font-medium">Disciplina:</span>
+                        <span id="modal-tech-discipline" class="sm:col-span-2 font-medium text-ink"></span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-1">
+                        <span class="text-muted font-medium">Metodologías / Técnica:</span>
+                        <span id="modal-tech-methods" class="sm:col-span-2 text-ink/90"></span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-1">
+                        <span class="text-muted font-medium">Contexto:</span>
+                        <span id="modal-tech-context" class="sm:col-span-2 text-ink/90"></span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-1">
+                        <span class="text-muted font-medium">Equipo / Autoría:</span>
+                        <span id="modal-tech-team" class="sm:col-span-2 text-ink/90"></span>
+                    </div>
+                </div>
+
+                <div class="mt-6 border-t border-neutral-200 pt-4">
+                    <div class="micro-nav text-muted uppercase mb-2">Palabras Clave</div>
+                    <div id="modal-tags" class="flex flex-wrap gap-1.5"></div>
+                </div>
+            </div>
+
+            <div class="mt-8 border-t border-neutral-200 pt-4 flex flex-wrap items-center justify-between gap-3">
+                <button onclick="prevModalProject()" class="micro-nav font-semibold hover:underline">← Proyecto anterior</button>
+                <a id="modal-link" href="https://wiki.ead.pucv.cl/Matias_Cordova_Arce" target="_blank" rel="noopener noreferrer" class="bg-ink text-white px-4 py-2 text-xs font-medium hover:bg-neutral-800 transition">
+                    Documentación en Wiki Casiopea e[ad] ↗
+                </a>
+                <button onclick="nextModalProject()" class="micro-nav font-semibold hover:underline">Siguiente proyecto →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed top-5 right-5 z-50 hidden bg-ink text-white px-4 py-2.5 text-xs font-medium shadow-xl border border-white/15">
+        Copiado al portapapeles
+    </div>
+
+    <script>
+        function getDriveEndpoints(fileId) {
+            if (!fileId) return null;
+            return {
+                primary: `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`,
+                fallback1: `https://lh3.googleusercontent.com/d/${fileId}=w2000`,
+                fallback2: `https://drive.google.com/uc?export=view&id=${fileId}`
+            };
+        }
+
+        window.handleDriveImgError = function(imgEl) {
+            const step = parseInt(imgEl.getAttribute('data-fallback-step') || '0', 10);
+            const f1 = imgEl.getAttribute('data-fallback-1');
+            const f2 = imgEl.getAttribute('data-fallback-2');
+            if (step === 0 && f1) {
+                imgEl.setAttribute('data-fallback-step', '1');
+                imgEl.src = f1;
+            } else if (step === 1 && f2) {
+                imgEl.setAttribute('data-fallback-step', '2');
+                imgEl.src = f2;
+            }
+        };
+
+        window.handleLogoFallback = function(imgEl) {
+            const step = parseInt(imgEl.getAttribute('data-fallback-step') || '0', 10);
+            const f1 = imgEl.getAttribute('data-fallback-1');
+            const f2 = imgEl.getAttribute('data-fallback-2');
+            if (step === 0 && f1) {
+                imgEl.setAttribute('data-fallback-step', '1');
+                imgEl.src = f1;
+            } else if (step === 1 && f2) {
+                imgEl.setAttribute('data-fallback-step', '2');
+                imgEl.src = f2;
+            } else {
+                imgEl.classList.add('hidden');
+                const svgFallback = imgEl.parentElement.querySelector('.surcos-svg-fallback');
+                if (svgFallback) svgFallback.classList.remove('hidden');
+            }
+        };
+
+        const portfolioProjects = [
+            {
+                id: 0,
+                year: "2026",
+                code: "ECOMAPU TRAVEL",
+                pages: "01-02",
+                category: "PROYECTO DE DISEÑO DE SERVICIOS",
+                projectName: "Ecomapu Travel",
+                shortTitle: "Ecomapu Travel",
+                giantTitle: "Ecomapu",
+                kicker: "ECOMAPU TRAVEL · 2026",
+                subtitle: "Rediseño integral de la experiencia del Free Tour patrimonial en el Barrio Puerto de Valparaíso",
+                discipline: "Service Design / UX Research / Interaction Design",
+                methods: "Gigamapping, Modelo AT-ONE, User Personas, Customer Journey Maps, Service Blueprint.",
+                context: "Taller de Diseño de Servicios, e[ad] PUCV (2026).",
+                team: "Matías Arce Córdova, Antonela Barría, Florencia Pimentel.",
+                description: "Rediseño integral de la experiencia del Free Tour patrimonial en el Barrio Puerto de Valparaíso. El proyecto aborda el turismo como un sistema territorial complejo, diagnosticando las fricciones operativas entre visitantes, guías locales y el entorno urbano.",
+                body2: "A través de levantamiento en terreno (Gigamapping) y la matriz estratégica AT-ONE, se estructuraron nuevos flujos de interacción para optimizar los puntos de contacto (touchpoints), transformando el recorrido en una red de experiencias sostenibles, claras y vinculadas a la memoria local.",
+                driveFileId: "1vzbig8DKnl3nJk5UZ3OyXGJPsZasHPd8",
+                gallery: [
+                    { id: "1vzbig8DKnl3nJk5UZ3OyXGJPsZasHPd8", num: "01", label: "Ecomapu Travel · 01", detailZoom: false },
+                    { id: "1Z14-YDnJQZpao5J8vY09LcCpnmJjUZem", num: "02", label: "Ecomapu Travel · 02", detailZoom: false }
+                ],
+                wikiUrl: "https://wiki.ead.pucv.cl/Ecomapu_/_Free_tour_Valpara%C3%ADso_-_Antonela_Barr%C3%ADa,_Florencia_Pimentel,_Matias_Arce",
+                wikiLabel: "Wiki Casiopea: Ecomapu Travel ↗",
+                secondaryLinks: [
+                    { url: "https://wiki.ead.pucv.cl/Taller_de_Dise%C3%B1o_de_Servicios_2026", label: "Taller de Diseño de Servicios 2026 ↗" }
+                ],
+                tags: ["Service Design", "UX Research", "Gigamapping", "Modelo AT-ONE", "Service Blueprint", "Barrio Puerto"]
+            },
+            {
+                id: 1,
+                year: "2025",
+                code: "SENSOMAP",
+                pages: "01-02",
+                category: "PROYECTO DE DISEÑO DE SERVICIOS Y EXPERIENCIA DE USUARIO",
+                projectName: "SensoMap",
+                shortTitle: "SensoMap",
+                giantTitle: "SensoMap",
+                kicker: "SENSOMAP · 2025",
+                subtitle: "Un mapa sensorial que cuida el bienestar de tu infante en Valparaíso y Viña del Mar",
+                discipline: "UX/UI Design / Accesibilidad Digital / Diseño de Interacción",
+                methods: "User Personas, Arquitectura de Información, Prototipado en Figma, Diseño de Sistemas Visuales.",
+                context: "Taller de Diseño de Interacción, e[ad] PUCV (2025). Público Objetivo: Cuidadores y familias de infantes con DIS/TEA.",
+                team: "Matías Arce Córdova, Jacinta Arellano, Valentina Maldonado, Rocío Olguín.",
+                description: "Herramienta digital de diseño de interacción orientada a facilitar la navegación y apropiación del espacio urbano para cuidadores de infantes con Diferencias en la Integración Sensorial (DIS) y dentro del espectro autista.",
+                body2: "El proyecto aborda la falta de información contextual en la ciudad, transformando la experiencia de salida familiar en un proceso seguro, predecible y empático. Mediante una interfaz centrada en la accesibilidad cognitiva y la síntesis cartográfica, la plataforma permite identificar, evaluar y compartir puntos urbanos adaptados a perfiles sensoriales específicos.",
+                driveFileId: "1YdGrY6PltN_rdJrtkcAl8UOhyftRc_5N",
+                gallery: [
+                    { id: "1YdGrY6PltN_rdJrtkcAl8UOhyftRc_5N", num: "01", label: "SensoMap · 01", detailZoom: false },
+                    { id: "1_avuEdKmvXnENeyasOIu0SiwyFcOLF0-", num: "02", label: "SensoMap · 02", detailZoom: false }
+                ],
+                wikiUrl: "https://wiki.ead.pucv.cl/Grupo_1:_Sensomap",
+                wikiLabel: "Wiki Casiopea: SensoMap ↗",
+                secondaryLinks: [
+                    { url: "https://youtu.be/9STTfOexij4", label: "Video Prototipo SensoMap (YouTube) ↗" }
+                ],
+                tags: ["UX/UI Design", "Accesibilidad Cognitiva", "Diseño de Interacción", "Cartografía Sensorial", "Figma", "DIS / TEA"]
+            },
+            {
+                id: 2,
+                year: "2026",
+                code: "URDIMBRE CONTENCIÓN",
+                pages: "01-02",
+                category: "PROYECTO DE DISEÑO INDUSTRIAL",
+                projectName: "Urdimbre Contención",
+                shortTitle: "Urdimbre Contención",
+                giantTitle: "Urdimbre",
+                kicker: "URDIMBRE CONTENCIÓN · 2026",
+                subtitle: "Sistema de apoyo manual que acompaña la impresión 3D en arcilla sosteniendo zonas inestables",
+                discipline: "Fabricación Digital / Diseño Paramétrico / Interacción Material",
+                methods: "Base cuadriculada, paneles de acrílico con repisas modulares, soportes de fijación y varillas de soporte.",
+                context: "Taller de Personas y Territorios (TPYT 2026), e[ad] PUCV.",
+                team: "Matías Arce Córdova, Alonso Hernández, Florencia Pimentel.",
+                description: "Dispositivo de soporte físico y mediación técnica diseñado para expandir los límites geométricos de la manufactura aditiva con materiales fluidos. El proyecto aborda la restricción crítica de la impresión 3D en arcilla: la dependencia de la autoportancia de la masa húmeda, que suele colapsar por gravedad ante ángulos pronunciados o voladizos.",
+                body2: "A través de un sistema modular de contención progresiva, el proyecto introduce el andamio efímero como una variable coordinada con la máquina. Esto permite sostener temporalmente el peso del material blando durante su deposición capa sobre capa, habilitando formas cóncavas, pliegues y geometrías oblicuas que el material no podría conservar por sí solo.",
+                driveFileId: "1GoSxXkmrO1BKoR2Av1iMZLDp3SVzzuPa",
+                gallery: [
+                    { id: "1GoSxXkmrO1BKoR2Av1iMZLDp3SVzzuPa", num: "01", label: "Urdimbre Contención · 01", detailZoom: false },
+                    { id: "1GoSxXkmrO1BKoR2Av1iMZLDp3SVzzuPa", num: "02", label: "Urdimbre Contención · 02", detailZoom: true }
+                ],
+                wikiUrl: "https://wiki.ead.pucv.cl/Matias_Arce,_Alonso_Hernandez,_Florencia_Pimentel._TPyT_S1_2026._Flujo_y_Asiento",
+                wikiLabel: "Wiki Casiopea: Urdimbre Contención ↗",
+                secondaryLinks: [
+                    { url: "https://wiki.ead.pucv.cl/Taller_de_personas_y_territorios_2026", label: "Taller de Personas y Territorios 2026 ↗" }
+                ],
+                tags: ["Impresión 3D Arcilla", "Acrílico Corte Láser", "Interacción Material", "Andamio Efímero", "TPYT 2026"]
+            },
+            {
+                id: 3,
+                year: "2026",
+                code: "RESONANCIAS DEL TERRITORIO",
+                pages: "01-02",
+                category: "PROYECTO DE DISEÑO INDUSTRIAL",
+                projectName: "Resonancias del Territorio",
+                shortTitle: "Resonancias del Territorio",
+                giantTitle: "Resonancias",
+                kicker: "RESONANCIAS DEL TERRITORIO · 2026",
+                subtitle: "Tradición alfarera Diaguita-Inca, resonancia de Helmholtz y moldes de yeso en dos chapas",
+                discipline: "Modelación Digital / Diseño Acústico / Fabricación y Matricería Cerámica",
+                methods: "Blender, Autodesk Fusion 360, software de laminado 3D. Impresión 3D en PLA Basic, Encofrado en MDF, moldes en yeso cerámico y colada en arcilla líquida.",
+                context: "Taller de Personas y Territorios (Ciclo 2, 2026), e[ad] PUCV.",
+                team: "Autor: Matías Arce Córdova.",
+                description: "Investigación morfológica, acústica y material orientada al diseño y fabricación de un aerófono cerámico contemporáneo a partir de matrices y moldes de colada. El proyecto parte del estudio de la tradición alfarera prehispánica Diaguita-Inca y el principio acústico de resonancia de Helmholtz, trasladando el rigor geométrico de patrones textiles ancestrales hacia un cuerpo tridimensional funcional.",
+                body2: "Mediante modelado 3D paramétrico, impresión en PLA y construcción de matrices de yeso en dos chapas, el proyecto articula la memoria cultural con el prototipado digital. La pieza final resuelve simultáneamente el comportamiento acústico de la cámara, la ergonomía del agarre durante la ejecución y un apoyo estático equilibrado para el entorno cotidiano.",
+                driveFileId: "1mkU4elpStV3ivzHqEcESYQDI3C2xdShN",
+                gallery: [
+                    { id: "1mkU4elpStV3ivzHqEcESYQDI3C2xdShN", num: "01", label: "Resonancias del Territorio · 01", detailZoom: false },
+                    { id: "1NYgQy3G33UvI0hRKK0uggQ270ZmYhZrf", num: "02", label: "Resonancias del Territorio · 02", detailZoom: false }
+                ],
+                wikiUrl: "https://wiki.ead.pucv.cl/Taller_de_personas_y_territorios_2026",
+                wikiLabel: "Wiki Casiopea: Resonancias del Territorio ↗",
+                secondaryLinks: [
+                    { url: "https://wiki.ead.pucv.cl/Matias_Cordova_Arce", label: "Perfil Autor: Matías Arce Córdova en Casiopea ↗" }
+                ],
+                tags: ["Diseño Acústico", "Helmholtz", "Matricería en Yeso", "Colada Cerámica", "Blender / Fusion 360", "Diaguita-Inca"]
+            },
+            {
+                id: 4,
+                year: "2026",
+                code: "TRAYECTORIA EÓLICA INVERSA",
+                pages: "01-02",
+                category: "PROYECTO DE DISEÑO INDUSTRIAL",
+                projectName: "Trayectoria Eólica Inversa",
+                shortTitle: "Trayectoria Eólica Inversa",
+                giantTitle: "Trayectoria",
+                kicker: "TRAYECTORIA EÓLICA INVERSA · 2026",
+                subtitle: "Computación generativa y manufactura aditiva cerámica a partir de la semilla de arce",
+                discipline: "Computational Design / Parametric Modeling / Ceramic 3D Printing (LDM)",
+                methods: "Tracker (análisis de movimiento), Rhinoceros 3D, Grasshopper. Parámetros: Boquilla de 5 mm, paso vertical de 1.5 mm, costura continua en espiral, avance F500.",
+                context: "Taller de Personas y Territorios 2026, e[ad] PUCV.",
+                team: "Autor: Matías Arce Córdova.",
+                description: "Exploración morfológica que traduce un fenómeno cinético natural en una estructura física autoportante mediante computación generativa y manufactura aditiva. El punto de partida es la observación del descenso helicoidal de la sámara (semilla de arce), cuya geometría responde a fuerzas contrapuestas de gravedad y resistencia del aire.",
+                body2: "El proyecto no imita la botánica superficial, sino que toma las coordenadas tridimensionales de la caída registradas fotograma a fotograma y las convierte en la curva directriz de un algoritmo. A través de la acumulación secuencial de pasta de arcilla húmeda, la pieza final conserva la memoria física del viento y de la máquina sobre la materia.",
+                driveFileId: "13i_bCZG460GTQqRL8RENCGY6qxehOMiq",
+                gallery: [
+                    { id: "13i_bCZG460GTQqRL8RENCGY6qxehOMiq", num: "01", label: "Trayectoria Eólica Inversa · 01", detailZoom: false },
+                    { id: "1gUyYwSLCGuRnmia1boomsUNW0bCM9Rxv", num: "02", label: "Trayectoria Eólica Inversa · 02", detailZoom: false }
+                ],
+                wikiUrl: "https://wiki.ead.pucv.cl/TPyT_S1_2026._Trayectoria_E%C3%B3lica_Inversa",
+                wikiLabel: "Wiki Casiopea: Trayectoria Eólica Inversa ↗",
+                secondaryLinks: [
+                    { url: "https://wiki.ead.pucv.cl/Taller_de_personas_y_territorios_2026", label: "Taller de Personas y Territorios 2026 ↗" }
+                ],
+                tags: ["Computational Design", "Rhinoceros 3D", "Grasshopper", "Tracker", "Ceramic 3D Printing LDM", "Sámara de Arce"]
+            },
+            {
+                id: 5,
+                year: "2026",
+                code: "PERCEPCIÓN SONORA",
+                pages: "01-02",
+                category: "PROYECTO DE DISEÑO DE INFORMACIÓN Y UX",
+                projectName: "Percepción Sonora",
+                shortTitle: "Percepción Sonora",
+                giantTitle: "Percepción",
+                kicker: "PERCEPCIÓN SONORA · 2026",
+                subtitle: "Captura y espacialización de la percepción acústica en Muelle Prat, Sotomayor, Serrano y Echaurren",
+                discipline: "Diseño de Información / Instrumentación y Dispositivos / UX — Web Front-End",
+                methods: "Diseño colectivo de instrumento físico de medición con discos de acrílico traslúcido, trabajo de campo (46 registros) y desarrollo de interfaz web interactiva (HTML/CSS/JS en GitHub Pages).",
+                context: "Taller de Diseño de Servicios, e[ad] PUCV (2026) (EN PROCESO).",
+                team: "Equipo del Proyecto (Grupo 2): Matías Arce Córdova, Francisco Daniou, Sofía Vera, Catalina Cabezas y Piera Ivelic · Diseño y Desarrollo Web (GitHub Pages): Matías Arce Córdova.",
+                description: "Investigación empírica y diseño de dispositivos desarrollados por el Grupo 2 para la captura y espacialización de la percepción acústica en el Barrio Puerto de Valparaíso. El proyecto aborda el paisaje sonoro no como una simple cifra de decibeles, sino como una dimensión habitable y sensible del espacio público, donde la arquitectura y los flujos cotidianos condicionan el confort humano.",
+                body2: "A través del diseño y fabricación grupal de un instrumento de medición física en terreno, el equipo sistematizó observaciones en Muelle Prat, Plaza Sotomayor, Calle Serrano y Plaza Echaurren. Como extensión digital del proyecto colectivo, Matías Arce Córdova diseñó y desarrolló la plataforma web interactiva que opera como repositorio y visualizador del registro de campo.",
+                driveFileId: "1fGDQ63bZ4zdCmHn4OsjXLikQBATvL94Q",
+                gallery: [
+                    { id: "1fGDQ63bZ4zdCmHn4OsjXLikQBATvL94Q", num: "01", label: "Percepción Sonora · 01", detailZoom: false },
+                    { id: "1fGDQ63bZ4zdCmHn4OsjXLikQBATvL94Q", num: "02", label: "Percepción Sonora · 02", detailZoom: true }
+                ],
+                wikiUrl: "https://wiki.ead.pucv.cl/Proyecto_de_Visualizaci%C3%B3n_-_Grupo_2",
+                wikiLabel: "Wiki Casiopea: Percepción Sonora ↗",
+                secondaryLinks: [
+                    { url: "https://matiasarcec.github.io/percepcionsonora/", label: "Plataforma Web Interactiva (Desarrollo: Matías Arce Córdova) ↗" }
+                ],
+                tags: ["Diseño de Información", "Grupo 2 e[ad]", "Instrumento Acrílico", "Desarrollo Web Front-End", "Barrio Puerto", "Paisaje Sonoro"]
+            }
+        ];
+
+        let currentFrame3Project = 2;
+        let currentFrame3PhotoIdx = 0;
+        let currentModalProject = 2;
+        let currentModalPhotoIdx = 0;
+
+        function buildUniformPhotoHTML(projectIndex, photoIdx) {
+            const p = portfolioProjects[projectIndex];
+            const gItem = p.gallery[photoIdx] || p.gallery[0];
+            const endpoints = getDriveEndpoints(gItem.id);
+            const zoomClass = gItem.detailZoom ? 'photo-detail-zoom' : 'editorial-photo';
+
+            return `
+                <div class="relative w-full h-full bg-cardgray flex items-center justify-center overflow-hidden group">
+                    <img src="${endpoints.primary}"
+                         data-fallback-1="${endpoints.fallback1}"
+                         data-fallback-2="${endpoints.fallback2}"
+                         data-fallback-step="0"
+                         onerror="window.handleDriveImgError(this)"
+                         alt="${p.projectName} · ${gItem.num}"
+                         class="w-full h-full object-cover ${zoomClass} drive-photo-render" />
+                    <div class="absolute top-2.5 left-2.5 bg-ink/85 backdrop-blur-xs text-white px-2 py-0.5 text-[9.5px] font-mono">
+                        ${gItem.num} / 02
+                    </div>
+                    <div class="absolute bottom-2.5 right-2.5 bg-ink/85 backdrop-blur-xs text-white px-2.5 py-1 text-[10px] font-medium">
+                        ${p.projectName} · ${gItem.num}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderProjectMedia() {
+            const activeProj = portfolioProjects[currentFrame3Project];
+            const f3Center = document.getElementById('f3-center-frame');
+            if (f3Center) {
+                f3Center.innerHTML = buildUniformPhotoHTML(currentFrame3Project, currentFrame3PhotoIdx);
+                f3Center.onclick = () => openProjectModal(currentFrame3Project, currentFrame3PhotoIdx);
+            }
+
+            const thumbsContainer = document.getElementById('f3-gallery-thumbs');
+            if (thumbsContainer && activeProj.gallery) {
+                thumbsContainer.innerHTML = activeProj.gallery.slice(0, 2).map((gItem, gIdx) => {
+                    const ep = getDriveEndpoints(gItem.id);
+                    const isSelected = gIdx === currentFrame3PhotoIdx;
+                    const zoomClass = gItem.detailZoom ? 'photo-detail-zoom' : '';
+                    return `
+                        <button onclick="selectFrame3Photo(${gIdx})" class="group text-left border ${isSelected ? 'border-ink bg-ink text-white' : 'border-neutral-300 bg-offpaper text-ink hover:border-ink'} transition overflow-hidden flex flex-col">
+                            <div class="photo-uniform-frame">
+                                <img src="${ep.primary}" data-fallback-1="${ep.fallback1}" data-fallback-2="${ep.fallback2}" data-fallback-step="0" onerror="window.handleDriveImgError(this)" alt="${activeProj.projectName} · ${gItem.num}" class="w-full h-full object-cover ${zoomClass} drive-photo-render" />
+                            </div>
+                            <div class="px-2.5 py-1.5 flex items-center justify-between w-full text-[10.5px] font-medium">
+                                <span class="truncate">${activeProj.projectName}</span>
+                                <span class="font-mono font-bold">${gItem.num}</span>
+                            </div>
+                        </button>
+                    `;
+                }).join('');
+            }
+        }
+
+        function selectFrame3Photo(photoIdx) {
+            currentFrame3PhotoIdx = photoIdx;
+            renderProjectMedia();
+        }
+
+        const youtubeWorkVideos = [
+            {
+                projectName: "Surcos · 01",
+                shortTab: "01 surcos",
+                code: "01-04",
+                num: "01",
+                videoId: "CpAsqw2tDj4",
+                author: "Matías Arce Córdova · * surcos",
+                description: "Realización audiovisual, cámara y edición autodidacta bajo la marca personal Surcos.",
+                coverDriveId: "1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo"
+            },
+            {
+                projectName: "Surcos · 02",
+                shortTab: "02 surcos",
+                code: "02-04",
+                num: "02",
+                videoId: "EKJgdmxpLks",
+                author: "Matías Arce Córdova · * surcos",
+                description: "Dirección de fotografía, captura en terreno y montaje audiovisual desarrollado en Surcos.",
+                coverDriveId: "1GoSxXkmrO1BKoR2Av1iMZLDp3SVzzuPa"
+            },
+            {
+                projectName: "Surcos · 03",
+                shortTab: "03 surcos",
+                code: "03-04",
+                num: "03",
+                videoId: "UTuDY6BrJJM",
+                author: "Matías Arce Córdova · * surcos",
+                description: "Exploración visual, registro documental y postproducción de video por Matías Arce Córdova.",
+                coverDriveId: "13i_bCZG460GTQqRL8RENCGY6qxehOMiq"
+            },
+            {
+                projectName: "Surcos · 04",
+                shortTab: "04 surcos",
+                code: "04-04",
+                num: "04",
+                videoId: "LhvuLcE7LDc",
+                author: "Matías Arce Córdova · * surcos",
+                description: "Registro audiovisual y narrativa en movimiento producida de forma autodidacta en Surcos.",
+                coverDriveId: "1mkU4elpStV3ivzHqEcESYQDI3C2xdShN"
+            }
+        ];
+
+        let activeYouTubeIdx = 0;
+        let embedHostMode = 0;
+
+        function getEmbedUrlForVideo(videoId, autoplay = false) {
+            const autoParam = autoplay ? "1" : "0";
+            let originParam = "";
+            try {
+                if (window.location && window.location.origin && window.location.origin.startsWith('http')) {
+                    originParam = `&origin=${encodeURIComponent(window.location.origin)}`;
+                }
+            } catch (e) {}
+
+            if (embedHostMode === 0) {
+                return `https://www.youtube.com/embed/${videoId}?autoplay=${autoParam}&rel=0&modestbranding=1&playsinline=1${originParam}`;
+            } else if (embedHostMode === 1) {
+                return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=${autoParam}&rel=0&modestbranding=1&playsinline=1`;
+            } else {
+                return `https://www.youtube.com/embed/${videoId}?autoplay=${autoParam}&controls=1&playsinline=1`;
+            }
+        }
+
+        window.activateInPageVideoPlayer = function() {
+            const currentVid = youtubeWorkVideos[activeYouTubeIdx] || youtubeWorkVideos[0];
+            const stage = document.getElementById('youtube-stage-wrapper');
+            if (!stage || !currentVid) return;
+
+            const embedSrc = getEmbedUrlForVideo(currentVid.videoId, true);
+            stage.innerHTML = `
+                <iframe id="youtube-main-iframe"
+                        class="w-full h-full border-0"
+                        src="${embedSrc}"
+                        title="${currentVid.projectName} — * surcos"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                </iframe>
+            `;
+        };
+
+        window.switchEmbedHostMode = function() {
+            embedHostMode = (embedHostMode + 1) % 3;
+            const modeNames = ["Estándar (YouTube)", "Sin Cookies (NoCookie)", "Directo HTML5"];
+            const labelEl = document.getElementById('yt-embed-mode-label');
+            if (labelEl) {
+                labelEl.textContent = `Servidor Reproductor: ${modeNames[embedHostMode]}`;
+            }
+            activateInPageVideoPlayer();
+            showToast(`Reproductor cambiado a modo: ${modeNames[embedHostMode]}`);
+        };
+
+        function renderYouTubeSection(autoStart = false) {
+            const currentVid = youtubeWorkVideos[activeYouTubeIdx] || youtubeWorkVideos[0];
+            if (!currentVid) return;
+
+            const stage = document.getElementById('youtube-stage-wrapper');
+            if (stage) {
+                const thumbHd = `https://img.youtube.com/vi/${currentVid.videoId}/maxresdefault.jpg`;
+                const thumbHq = `https://img.youtube.com/vi/${currentVid.videoId}/hqdefault.jpg`;
+                const embedSrc = getEmbedUrlForVideo(currentVid.videoId, autoStart);
+
+                stage.innerHTML = `
+                    <iframe id="youtube-main-iframe"
+                            class="w-full h-full border-0 relative z-10"
+                            src="${embedSrc}"
+                            title="${currentVid.projectName} — * surcos"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                    </iframe>
+                    <img src="${thumbHd}"
+                         onerror="this.onerror=null; this.src='${thumbHq}';"
+                         alt="${currentVid.projectName}"
+                         class="absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none z-0" />
+                `;
+            }
+
+            const titleEl = document.getElementById('yt-active-title');
+            if (titleEl) titleEl.textContent = currentVid.projectName;
+
+            const descEl = document.getElementById('yt-active-desc');
+            if (descEl) descEl.textContent = currentVid.description;
+
+            const watchLink = document.getElementById('yt-external-watch');
+            if (watchLink) watchLink.href = `https://youtu.be/${currentVid.videoId}`;
+
+            const badgeEl = document.getElementById('yt-active-code-badge');
+            if (badgeEl) badgeEl.textContent = `${currentVid.num} / 04`;
+
+            const captionLeft = document.getElementById('yt-caption-left');
+            if (captionLeft) captionLeft.textContent = `${currentVid.projectName} · 01-04`;
+
+            const navTabs = document.getElementById('video-nav-tabs');
+            if (navTabs) {
+                navTabs.innerHTML = youtubeWorkVideos.map((v, idx) => `
+                    <button onclick="selectYouTubeVideo(${idx})" class="${idx === activeYouTubeIdx ? 'font-bold text-ink underline underline-offset-4' : 'hover:text-ink text-ink/75'} transition">
+                        ${v.shortTab}
+                    </button>
+                `).join('');
+            }
+
+            const cardsList = document.getElementById('youtube-cards-list');
+            if (cardsList) {
+                cardsList.innerHTML = youtubeWorkVideos.map((v, idx) => {
+                    const isSelected = idx === activeYouTubeIdx;
+                    const thumbUrl = `https://img.youtube.com/vi/${v.videoId}/hqdefault.jpg`;
+                    const fallbackEp = getDriveEndpoints(v.coverDriveId || "1nkVUCtTb5ktursKkZUYS_qDyOKxe6SQo");
+                    return `
+                        <button onclick="selectYouTubeVideo(${idx})" class="group text-left border ${isSelected ? 'border-ink bg-ink text-white' : 'border-neutral-300 bg-offpaper text-ink hover:border-ink'} transition overflow-hidden flex flex-col">
+                            <div class="photo-uniform-frame">
+                                <img src="${thumbUrl}"
+                                     onerror="this.onerror=null; this.src='${fallbackEp.primary}';"
+                                     alt="${v.projectName}"
+                                     class="w-full h-full object-cover editorial-photo drive-photo-render" />
+                                <span class="absolute top-2 left-2 bg-ink/90 text-white text-[9.5px] font-mono px-2 py-0.5">
+                                    ${v.num} / 04
+                                </span>
+                                <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition">
+                                    <span class="w-8 h-8 rounded-full bg-white/95 text-ink flex items-center justify-center text-xs font-bold shadow-md">▶</span>
+                                </div>
+                            </div>
+                            <div class="px-2.5 py-1.5 flex items-center justify-between w-full text-[10.5px] font-semibold">
+                                <span class="truncate">${v.projectName}</span>
+                                <span class="font-mono text-[10px]">${v.num}</span>
+                            </div>
+                        </button>
+                    `;
+                }).join('');
+            }
+        }
+
+        window.selectYouTubeVideo = function(idx) {
+            activeYouTubeIdx = idx;
+            renderYouTubeSection(true);
+        };
+
+        let currentMaterialIndex = 0;
+        const materialsPreset = [
+            { name: "Arcilla Real (Textura LDM 1.5mm)", short: "3D: Arcilla Real", mode: "clay_photo" },
+            { name: "Grabado Técnico B/N (Lámina 11)", short: "3D: Grabado B/N", mode: "engraving" },
+            { name: "Malla Paramétrica Grasshopper", short: "3D: Malla Grasshopper", mode: "wire" }
+        ];
+
+        let sharedClayTextures = null;
+
+        function getAuthenticClayTextures() {
+            if (sharedClayTextures) return sharedClayTextures;
+
+            const width = 1024;
+            const height = 1024;
+
+            const diffCanvas = document.createElement('canvas');
+            diffCanvas.width = width;
+            diffCanvas.height = height;
+            const dCtx = diffCanvas.getContext('2d');
+
+            const bumpCanvas = document.createElement('canvas');
+            bumpCanvas.width = width;
+            bumpCanvas.height = height;
+            const bCtx = bumpCanvas.getContext('2d');
+
+            dCtx.fillStyle = '#928375';
+            dCtx.fillRect(0, 0, width, height);
+
+            bCtx.fillStyle = '#808080';
+            bCtx.fillRect(0, 0, width, height);
+
+            const numLayers = 96;
+            const layerPx = height / numLayers;
+
+            for (let layer = 0; layer < numLayers; layer++) {
+                const yCenter = layer * layerPx;
+
+                const gradDiff = dCtx.createLinearGradient(0, yCenter, 0, yCenter + layerPx);
+                gradDiff.addColorStop(0.0, '#66594e');
+                gradDiff.addColorStop(0.22, '#8b7d70');
+                gradDiff.addColorStop(0.50, '#9f9082');
+                gradDiff.addColorStop(0.78, '#8e8072');
+                gradDiff.addColorStop(1.0, '#62554a');
+
+                dCtx.fillStyle = gradDiff;
+                dCtx.fillRect(0, yCenter, width, layerPx + 0.5);
+
+                const gradBump = bCtx.createLinearGradient(0, yCenter, 0, yCenter + layerPx);
+                gradBump.addColorStop(0.0, '#242424');
+                gradBump.addColorStop(0.25, '#969696');
+                gradBump.addColorStop(0.52, '#dcdcdc');
+                gradBump.addColorStop(0.80, '#8c8c8c');
+                gradBump.addColorStop(1.0, '#242424');
+
+                bCtx.fillStyle = gradBump;
+                bCtx.fillRect(0, yCenter, width, layerPx + 0.5);
+            }
+
+            for (let i = 0; i < 6500; i++) {
+                const rx = Math.random() * width;
+                const ry = Math.random() * height;
+                const sz = Math.random() * 1.8 + 0.5;
+                const isDark = Math.random() > 0.45;
+                dCtx.fillStyle = isDark ? 'rgba(65, 55, 46, 0.12)' : 'rgba(175, 163, 150, 0.10)';
+                dCtx.fillRect(rx, ry, sz, sz * 0.7);
+            }
+
+            const diffuseMap = new THREE.CanvasTexture(diffCanvas);
+            diffuseMap.wrapS = THREE.RepeatWrapping;
+            diffuseMap.wrapT = THREE.ClampToEdgeWrapping;
+            diffuseMap.repeat.set(1, 1);
+
+            const bumpMap = new THREE.CanvasTexture(bumpCanvas);
+            bumpMap.wrapS = THREE.RepeatWrapping;
+            bumpMap.wrapT = THREE.ClampToEdgeWrapping;
+            bumpMap.repeat.set(1, 1);
+
+            sharedClayTextures = { diffuseMap, bumpMap };
+            return sharedClayTextures;
+        }
+
+        function createTrayectoriaVesselGeometry() {
+            const radialSegs = 160;
+            const heightSegs = 200;
+            const totalHeight = 3.50;
+
+            const geom = new THREE.CylinderGeometry(0.50, 0.56, totalHeight, radialSegs, heightSegs, true);
+            const pos = geom.attributes.position;
+            const v = new THREE.Vector3();
+
+            function evaluateSmoothSilhouette(t) {
+                const baseCore = 0.52 - 0.05 * t;
+                const lowerBelly = 0.34 * Math.exp(-Math.pow((t - 0.23) / 0.165, 2));
+                const midWaistDip = -0.05 * Math.exp(-Math.pow((t - 0.48) / 0.11, 2));
+                const upperTorso = 0.25 * Math.exp(-Math.pow((t - 0.68) / 0.155, 2));
+                const neckCollar = -0.045 * Math.exp(-Math.pow((t - 0.90) / 0.085, 2));
+                const lipFlare = 0.032 * Math.exp(-Math.pow((t - 1.0) / 0.055, 2));
+                return baseCore + lowerBelly + midWaistDip + upperTorso + neckCollar + lipFlare;
+            }
+
+            function smoothBodyWindow(t) {
+                const bot = 1.0 / (1.0 + Math.exp(-(t - 0.06) / 0.025));
+                const top = 1.0 / (1.0 + Math.exp((t - 0.86) / 0.035));
+                return bot * top;
+            }
+
+            for (let i = 0; i < pos.count; i++) {
+                v.fromBufferAttribute(pos, i);
+                const t = (v.y + totalHeight * 0.5) / totalHeight;
+                const theta = Math.atan2(v.z, v.x);
+
+                const baseR = evaluateSmoothSilhouette(t);
+                const env = smoothBodyWindow(t);
+
+                const helixPhase = theta - (t * Math.PI * 2.35 - 0.85);
+                const helicalSwirl = (0.075 * Math.cos(helixPhase) + 0.028 * Math.cos(2.0 * helixPhase - 0.4)) * env;
+
+                const lowerLobeEnv = Math.exp(-Math.pow((t - 0.22) / 0.125, 2));
+                const lowerLobe = lowerLobeEnv * 0.095 * (0.5 + 0.5 * Math.cos(theta - 0.35));
+
+                const upperLobeEnv = Math.exp(-Math.pow((t - 0.67) / 0.135, 2));
+                const upperLobe = upperLobeEnv * 0.065 * (0.5 + 0.5 * Math.cos(theta - 2.65));
+
+                const coilUndulation = Math.sin(t * 96.0 * Math.PI * 2.0) * 0.0055;
+
+                const finalR = baseR + helicalSwirl + lowerLobe + upperLobe + coilUndulation;
+
+                const centerOffsetX = (Math.sin(t * Math.PI * 1.85 - 0.35) * 0.065 + lowerLobeEnv * 0.045) * env;
+                const centerOffsetZ = (Math.cos(t * Math.PI * 1.65) * 0.045) * env;
+
+                pos.setXYZ(
+                    i,
+                    Math.cos(theta) * finalR + centerOffsetX,
+                    v.y,
+                    Math.sin(theta) * finalR + centerOffsetZ
+                );
+            }
+
+            geom.computeVertexNormals();
+            const norm = geom.attributes.normal;
+            const stride = radialSegs + 1;
+            const nA = new THREE.Vector3();
+            const nB = new THREE.Vector3();
+            for (let row = 0; row <= heightSegs; row++) {
+                const idxStart = row * stride;
+                const idxEnd = row * stride + radialSegs;
+                nA.fromBufferAttribute(norm, idxStart);
+                nB.fromBufferAttribute(norm, idxEnd);
+                nA.add(nB).normalize();
+                norm.setXYZ(idxStart, nA.x, nA.y, nA.z);
+                norm.setXYZ(idxEnd, nA.x, nA.y, nA.z);
+            }
+            norm.needsUpdate = true;
+
+            return geom;
+        }
+
+        function buildTrayectoriaModelGroup(mode) {
+            const root = new THREE.Group();
+            const vesselGeom = createTrayectoriaVesselGeometry();
+            const textures = getAuthenticClayTextures();
+
+            if (mode === "wire") {
+                const wireMat = new THREE.MeshBasicMaterial({
+                    color: 0x1a1a1a,
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.42
+                });
+                root.add(new THREE.Mesh(vesselGeom, wireMat));
+            } else if (mode === "engraving") {
+                const engraveMat = new THREE.MeshLambertMaterial({
+                    color: 0xd8d8d8,
+                    map: textures.bumpMap,
+                    bumpMap: textures.bumpMap,
+                    bumpScale: 0.032,
+                    side: THREE.DoubleSide
+                });
+                root.add(new THREE.Mesh(vesselGeom, engraveMat));
+            } else {
+                const clayMat = new THREE.MeshLambertMaterial({
+                    color: 0xf7f4f0,
+                    map: textures.diffuseMap,
+                    bumpMap: textures.bumpMap,
+                    bumpScale: 0.022,
+                    side: THREE.DoubleSide
+                });
+                const outerVessel = new THREE.Mesh(vesselGeom, clayMat);
+                root.add(outerVessel);
+
+                const topLipRadius = 0.502;
+                const lipToroid = new THREE.Mesh(
+                    new THREE.TorusGeometry(topLipRadius, 0.022, 20, 120),
+                    clayMat
+                );
+                lipToroid.rotation.x = Math.PI * 0.5;
+                lipToroid.position.y = 3.50 * 0.5 - 0.01;
+                root.add(lipToroid);
+
+                const innerDarkMat = new THREE.MeshLambertMaterial({
+                    color: 0x4a3f36,
+                    bumpMap: textures.bumpMap,
+                    bumpScale: 0.015,
+                    side: THREE.BackSide
+                });
+                const innerNeck = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.485, 0.44, 1.25, 64, 24, true),
+                    innerDarkMat
+                );
+                innerNeck.position.y = 3.50 * 0.5 - 0.63;
+                root.add(innerNeck);
+
+                const baseDisc = new THREE.Mesh(
+                    new THREE.CircleGeometry(0.52, 64),
+                    new THREE.MeshLambertMaterial({ color: 0x6b5d50 })
+                );
+                baseDisc.rotation.x = Math.PI * 0.5;
+                baseDisc.position.y = -3.50 * 0.5 + 0.01;
+                root.add(baseDisc);
+            }
+
+            return root;
+        }
+
+        function setupSculptureScene(canvasId, initialTiltZ, scaleMultiplier) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return null;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(34, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+            camera.position.set(0, 0.08, 6.9);
+
+            const renderer = new THREE.WebGLRenderer({
+                canvas: canvas,
+                alpha: true,
+                antialias: true
+            });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const hemiLight = new THREE.HemisphereLight(0xf5f0ea, 0x6e6257, 0.85);
+            scene.add(hemiLight);
+
+            const keyLight = new THREE.DirectionalLight(0xfffaf2, 0.72);
+            keyLight.position.set(-3.2, 4.8, 5.5);
+            scene.add(keyLight);
+
+            const fillLight = new THREE.DirectionalLight(0xede6de, 0.28);
+            fillLight.position.set(3.5, 1.0, 4.0);
+            scene.add(fillLight);
+
+            let mesh = buildTrayectoriaModelGroup(materialsPreset[currentMaterialIndex].mode);
+            mesh.rotation.z = initialTiltZ;
+            mesh.rotation.x = 0.16;
+            mesh.scale.setScalar(scaleMultiplier);
+            scene.add(mesh);
+
+            let isDragging = false;
+            let prevX = 0, prevY = 0;
+            let targetRotY = -0.15, targetRotX = 0.16;
+
+            canvas.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                prevX = e.clientX;
+                prevY = e.clientY;
+            });
+
+            window.addEventListener('mouseup', () => { isDragging = false; });
+
+            window.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const dx = e.clientX - prevX;
+                    const dy = e.clientY - prevY;
+                    targetRotY += dx * 0.011;
+                    targetRotX += dy * 0.009;
+                    prevX = e.clientX;
+                    prevY = e.clientY;
+                } else {
+                    const normX = (e.clientX / window.innerWidth) - 0.5;
+                    const normY = (e.clientY / window.innerHeight) - 0.5;
+                    targetRotY = -0.15 + normX * 0.55;
+                    targetRotX = 0.16 + normY * 0.22;
+                }
+            });
+
+            canvas.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    isDragging = true;
+                    prevX = e.touches[0].clientX;
+                    prevY = e.touches[0].clientY;
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchend', () => { isDragging = false; });
+
+            window.addEventListener('touchmove', (e) => {
+                if (isDragging && e.touches.length === 1) {
+                    const dx = e.touches[0].clientX - prevX;
+                    const dy = e.touches[0].clientY - prevY;
+                    targetRotY += dx * 0.012;
+                    targetRotX += dy * 0.01;
+                    prevX = e.touches[0].clientX;
+                    prevY = e.touches[0].clientY;
+                }
+            }, { passive: true });
+
+            return {
+                scene,
+                camera,
+                renderer,
+                mesh,
+                canvas,
+                initialTiltZ,
+                scaleMultiplier,
+                getTarget: () => ({ targetRotX, targetRotY }),
+                rebuildMesh: (newMode) => {
+                    scene.remove(mesh);
+                    mesh = buildTrayectoriaModelGroup(newMode);
+                    mesh.rotation.z = initialTiltZ;
+                    mesh.scale.setScalar(scaleMultiplier);
+                    scene.add(mesh);
+                },
+                getMesh: () => mesh
+            };
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3400);
+        }
+
+        function scrollToFrame(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function jumpToStudy(projectIndex) {
+            switchFrame3Study(projectIndex);
+            scrollToFrame('frame-3');
+        }
+
+        function switchFrame3Study(projectIndex) {
+            currentFrame3Project = projectIndex;
+            currentFrame3PhotoIdx = 0;
+            const p = portfolioProjects[projectIndex];
+
+            document.getElementById('f3-giant-title').textContent = p.giantTitle;
+            document.getElementById('f3-page-indicator').textContent = p.projectName.toUpperCase();
+            const yearBadge = document.getElementById('f3-project-year');
+            if (yearBadge) yearBadge.textContent = p.year || '2026';
+            document.getElementById('f3-counter-badge').textContent = `0${projectIndex + 1} / 06`;
+            document.getElementById('f3-kicker').textContent = `${p.projectName.toUpperCase()} · ${p.year || '2026'}`;
+            document.getElementById('f3-description').textContent = p.description;
+            document.getElementById('f3-description-2').textContent = p.body2;
+            document.getElementById('f3-meta-category').textContent = p.category;
+            document.getElementById('f3-meta-discipline').textContent = p.discipline;
+            document.getElementById('f3-meta-methods').textContent = p.methods;
+            document.getElementById('f3-meta-context').textContent = `${p.context} · ${p.team}`;
+
+            const extLink = document.getElementById('f3-external-url');
+            extLink.href = p.wikiUrl;
+
+            const wikiBox = document.getElementById('f3-wiki-links-box');
+            if (wikiBox) {
+                let html = `
+                    <a href="${p.wikiUrl}" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 px-2.5 bg-ink text-white hover:bg-neutral-800 transition text-[10.5px] font-semibold flex items-center justify-between">
+                        <span class="truncate">${p.wikiLabel}</span>
+                    </a>
+                `;
+                if (p.secondaryLinks) {
+                    p.secondaryLinks.forEach(sec => {
+                        html += `
+                            <a href="${sec.url}" target="_blank" rel="noopener noreferrer" class="w-full py-1 px-2.5 border border-neutral-300 bg-offpaper hover:border-ink transition text-[10px] font-medium flex items-center justify-between text-ink">
+                                <span class="truncate">${sec.label}</span>
+                            </a>
+                        `;
+                    });
+                }
+                wikiBox.innerHTML = html;
+            }
+
+            renderProjectMedia();
+
+            for (let i = 0; i < 6; i++) {
+                const btn = document.getElementById('f3-tab-' + i);
+                if (btn) {
+                    btn.className = (i === projectIndex)
+                        ? "font-bold text-ink underline underline-offset-4"
+                        : "hover:text-ink transition text-ink/75";
+                }
+            }
+        }
+
+        function stepFrame3Project(delta) {
+            const next = (currentFrame3Project + delta + portfolioProjects.length) % portfolioProjects.length;
+            switchFrame3Study(next);
+        }
+
+        function openProjectModal(index, photoIdx = 0) {
+            currentModalProject = index;
+            currentModalPhotoIdx = photoIdx;
+            const p = portfolioProjects[index];
+
+            document.getElementById('modal-index').textContent = `${p.projectName.toUpperCase()} · ${p.year}`;
+            document.getElementById('modal-category-badge').textContent = p.category;
+            document.getElementById('modal-title').textContent = p.projectName;
+            document.getElementById('modal-subtitle').textContent = p.subtitle;
+            document.getElementById('modal-body-1').textContent = p.description;
+            document.getElementById('modal-body-2').textContent = p.body2;
+
+            document.getElementById('modal-tech-discipline').textContent = p.discipline;
+            document.getElementById('modal-tech-methods').textContent = p.methods;
+            document.getElementById('modal-tech-context').textContent = p.context;
+            document.getElementById('modal-tech-team').textContent = p.team;
+
+            renderModalGalleryImage();
+
+            const wikiBar = document.getElementById('modal-wiki-bar');
+            if (wikiBar) {
+                let linksHTML = `
+                    <a href="${p.wikiUrl}" target="_blank" rel="noopener noreferrer" class="bg-ink text-white px-3.5 py-1.5 text-xs font-semibold hover:bg-neutral-800 transition">
+                        ${p.wikiLabel}
+                    </a>
+                `;
+                if (p.secondaryLinks) {
+                    p.secondaryLinks.forEach(sec => {
+                        linksHTML += `
+                            <a href="${sec.url}" target="_blank" rel="noopener noreferrer" class="bg-white border border-neutral-300 text-ink px-3 py-1.5 text-xs font-medium hover:border-ink transition">
+                                ${sec.label}
+                            </a>
+                        `;
+                    });
+                }
+                wikiBar.innerHTML = linksHTML;
+            }
+
+            const tagsContainer = document.getElementById('modal-tags');
+            tagsContainer.innerHTML = '';
+            p.tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = "text-[10.5px] px-2.5 py-1 bg-offpaper border border-neutral-300 font-medium";
+                span.textContent = tag;
+                tagsContainer.appendChild(span);
+            });
+
+            const modalLink = document.getElementById('modal-link');
+            modalLink.href = p.wikiUrl;
+            modalLink.textContent = p.wikiLabel;
+
+            document.getElementById('project-modal').classList.remove('hidden');
+        }
+
+        function renderModalGalleryImage() {
+            const p = portfolioProjects[currentModalProject];
+            const activeItem = (p.gallery && p.gallery[currentModalPhotoIdx]) || p.gallery[0];
+            const endpoints = getDriveEndpoints(activeItem.id);
+            const zoomClass = activeItem.detailZoom ? 'photo-detail-zoom' : '';
+
+            const mediaContainer = document.getElementById('modal-media-container');
+            mediaContainer.innerHTML = `
+                <div class="bg-white p-3 flex flex-col items-center">
+                    <div class="photo-uniform-frame">
+                        <img src="${endpoints.primary}"
+                             data-fallback-1="${endpoints.fallback1}"
+                             data-fallback-2="${endpoints.fallback2}"
+                             data-fallback-step="0"
+                             onerror="window.handleDriveImgError(this)"
+                             alt="${p.projectName} · ${activeItem.num}"
+                             class="w-full h-full object-cover ${zoomClass} drive-photo-render" />
+                    </div>
+                    <div class="w-full mt-2 pt-2 border-t border-neutral-200 flex items-center justify-between text-[11px] font-mono text-muted">
+                        <span class="font-bold text-ink">${p.projectName}</span>
+                        <span>${activeItem.num} / 02</span>
+                    </div>
+                </div>
+            `;
+
+            const thumbsBar = document.getElementById('modal-thumbs-bar');
+            if (p.gallery) {
+                thumbsBar.innerHTML = p.gallery.slice(0, 2).map((gItem, idx) => {
+                    const ep = getDriveEndpoints(gItem.id);
+                    const active = idx === currentModalPhotoIdx;
+                    const thumbZoom = gItem.detailZoom ? 'photo-detail-zoom' : '';
+                    return `
+                        <button onclick="selectModalPhoto(${idx})" class="border ${active ? 'border-ink bg-ink text-white' : 'border-neutral-300 bg-offpaper text-ink hover:border-ink'} text-[11px] font-medium transition overflow-hidden flex flex-col">
+                            <div class="photo-uniform-frame">
+                                <img src="${ep.primary}" data-fallback-1="${ep.fallback1}" data-fallback-2="${ep.fallback2}" data-fallback-step="0" onerror="window.handleDriveImgError(this)" alt="${p.projectName} · ${gItem.num}" class="w-full h-full object-cover ${thumbZoom} drive-photo-render" />
+                            </div>
+                            <div class="px-2.5 py-1.5 flex items-center justify-between w-full">
+                                <span class="truncate">${p.projectName}</span>
+                                <span class="font-mono font-bold">${gItem.num}</span>
+                            </div>
+                        </button>
+                    `;
+                }).join('');
+            }
+        }
+
+        function selectModalPhoto(idx) {
+            currentModalPhotoIdx = idx;
+            renderModalGalleryImage();
+        }
+
+        function closeProjectModal() {
+            document.getElementById('project-modal').classList.add('hidden');
+        }
+
+        function nextModalProject() {
+            const next = (currentModalProject + 1) % portfolioProjects.length;
+            openProjectModal(next, 0);
+        }
+
+        function prevModalProject() {
+            const prev = (currentModalProject - 1 + portfolioProjects.length) % portfolioProjects.length;
+            openProjectModal(prev, 0);
+        }
+
+        function cycleSculptureMaterial() {
+            currentMaterialIndex = (currentMaterialIndex + 1) % materialsPreset.length;
+            const preset = materialsPreset[currentMaterialIndex];
+
+            const floatLabel = document.getElementById('floating-3d-label');
+            if (floatLabel) floatLabel.textContent = preset.short;
+
+            if (closingSceneObj) closingSceneObj.rebuildMesh(preset.mode);
+        }
+
+        function toggleColorEditorialMode() {
+            const body = document.getElementById('app-body');
+            const btn = document.getElementById('color-toggle-btn');
+            body.classList.toggle('bw-editorial-mode');
+            btn.textContent = body.classList.contains('bw-editorial-mode') ? "Modo B&N Editorial" : "Color Original";
+        }
+
+        function togglePresentationMode() {
+            const body = document.getElementById('app-body');
+            const btn = document.getElementById('mode-toggle-btn');
+            body.classList.toggle('frame-study-mode');
+            btn.textContent = body.classList.contains('frame-study-mode') ? "Vista Continua" : "Vista 5 Láminas";
+        }
+
+        function copyEmail() {
+            const tempInput = document.createElement('input');
+            tempInput.value = 'matias.arce.c@mail.pucv.cl';
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast('Correo copiado: matias.arce.c@mail.pucv.cl');
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeProjectModal();
+            }
+        });
+
+        let closingSceneObj = null;
+
+        window.onload = function () {
+            closingSceneObj = setupSculptureScene('closing-sculpture-canvas', 0.28, 1.20);
+            switchFrame3Study(2);
+            renderYouTubeSection(false);
+
+            window.addEventListener('resize', () => {
+                if (!closingSceneObj || !closingSceneObj.canvas) return;
+                const w = closingSceneObj.canvas.clientWidth;
+                const h = closingSceneObj.canvas.clientHeight;
+                if (w > 0 && h > 0) {
+                    closingSceneObj.camera.aspect = w / h;
+                    closingSceneObj.camera.updateProjectionMatrix();
+                    closingSceneObj.renderer.setSize(w, h);
+                }
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+                const time = performance.now() * 0.0006;
+
+                if (closingSceneObj && closingSceneObj.getMesh()) {
+                    const mesh = closingSceneObj.getMesh();
+                    const target = closingSceneObj.getTarget();
+                    mesh.rotation.y += (target.targetRotY - time * 0.45 - mesh.rotation.y) * 0.06;
+                    mesh.rotation.x += (target.targetRotX - mesh.rotation.x) * 0.06;
+                    mesh.position.y = Math.cos(time * 2.0) * 0.08;
+                    closingSceneObj.renderer.render(closingSceneObj.scene, closingSceneObj.camera);
+                }
+            }
+
+            animate();
+        };
+    </script>
+</body>
+</html>
